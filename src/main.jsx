@@ -15,9 +15,7 @@ async function deferRender() {
 deferRender().then(() => {
   ReactDOM.createRoot(document.getElementById('root')).render(
     <CustomizerContextProvider>
-      <Suspense fallback={<Spinner />}>
         <App />
-      </Suspense>
     </CustomizerContextProvider>,
   )
 })

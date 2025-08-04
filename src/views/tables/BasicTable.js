@@ -22,20 +22,11 @@ import { basicsTableData } from './tableData';
 import ParentCard from '../../components/shared/ParentCard';
 
 const basics = basicsTableData;
-const BCrumb = [
-  {
-    to: '/',
-    title: 'Home',
-  },
-  {
-    title: 'Basic Table',
-  },
-];
+
 
 const BasicTable = () => (
   <PageContainer title="Basic Table" description="this is Basic Table page">
     {/* breadcrumb */}
-    <Breadcrumb title="Basic Table" items={BCrumb} />
     {/* end breadcrumb */}
     <ParentCard title="Basic Table">
       <Paper variant="outlined">
@@ -49,19 +40,19 @@ const BasicTable = () => (
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Typography variant="h6">Users</Typography>
+                  <Typography variant="h6">Serial</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">Project Name</Typography>
+                  <Typography variant="h6">Module Name</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">Team</Typography>
+                  <Typography variant="h6">Total Lessons</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">Status</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">Budget</Typography>
+                  <Typography variant="h6">Action</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
