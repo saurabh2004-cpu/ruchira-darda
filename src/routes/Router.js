@@ -4,6 +4,7 @@ import { Navigate, createBrowserRouter } from 'react-router';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
 import CourseList from '../views/admin/CourseList';
 
+
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 
@@ -14,6 +15,7 @@ const CreateCategory = Loadable(lazy(() => import('../views/admin/CreateCategory
 const FormVertical = Loadable(lazy(() => import('../views/forms/FormVertical')));
 const BasicLayout = Loadable(lazy(() => import('../components/forms/form-vertical/BasicLayout')));
 const CreateCourse = Loadable(lazy(() => import('../views/admin/CreateCourse')));
+const LessionList = Loadable(lazy(() => import('../components/Courses/LessionList')));
 
 const Router = [
   {
@@ -28,6 +30,9 @@ const Router = [
 
       { path: '/admin/courses/create', exact: true, element: <CreateCourse /> },
       { path: '/admin/courses', exact: true, element: <CourseList /> },
+
+      { path: '/lessions', exact: true, element: <LessionList /> },
+
 
     ],
   },
