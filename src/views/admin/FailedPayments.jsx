@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import {
     Box,
@@ -18,81 +17,82 @@ import {
     MenuItem,
     FormControl,
 } from "@mui/material"
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
+import { Add as AddIcon, Visibility as VisibilityIcon, Delete as DeleteIcon, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
 import { useNavigate } from "react-router"
+import CreateNewEnrollment from "../../components/Enrollments/CreateNew"
 
-// Sample course data matching the image
-const courseData = [
+// Updated enrollment data matching the image
+const enrollmentData = [
     {
         id: 1,
         serial: 1,
-        instructor: "Muhammad Yunus",
-        title: "Macro Photography & Focus Stacking Made...",
-        category: "Photography & Video",
-        price: 18.0,
-        visibility: "Approved",
+        invoice: "#829776602",
+        student: "John Doe",
+        totalAmount: 20.00,
+        date: "12 Feb, 2025",
+        gateway: "Stripe",
+        payment: "Failed",
     },
     {
         id: 2,
         serial: 2,
-        instructor: "Ashif Mahmud",
-        title: "The Ultimate Photography Course For Begi...",
-        category: "Photography & Video",
-        price: 38.0,
-        visibility: "Approved",
+        invoice: "#1506512937",
+        student: "John Doe",
+        totalAmount: 100.00,
+        date: "06 Feb, 2025",
+        gateway: "Stripe",
+        payment: "Failed",
     },
     {
         id: 3,
         serial: 3,
-        instructor: "Jubair Ahmed",
-        title: "Real Estate Photography Masterclass 2025",
-        category: "Photography & Video",
-        price: 25.0,
-        visibility: "Approved",
+        invoice: "#725168301",
+        student: "John Doe",
+        totalAmount: 100.00,
+        date: "04 Feb, 2025",
+        gateway: "Stripe",
+        payment: "Failed",
     },
     {
         id: 4,
         serial: 4,
-        instructor: "Jubair Ahmed",
-        title: "Learn Windows Server 2022 (AD, DNS, GPO)...",
-        category: "Blockchain Develop",
-        price: 30.0,
-        visibility: "Approved",
+        invoice: "#1672858800",
+        student: "John Doe",
+        totalAmount: 189.00,
+        date: "20 Jan, 2025",
+        gateway: "Stripe",
+        payment: "Failed",
     },
     {
         id: 5,
         serial: 5,
-        instructor: "Jubair Ahmed",
-        title: "Real World Projects: Linux Training for...",
-        category: "Blockchain Develop",
-        price: 32.0,
-        visibility: "Approved",
+        invoice: "#104522873",
+        student: "John Doe",
+        totalAmount: 149.00,
+        date: "20 Jan, 2025",
+        gateway: "Stripe",
+        payment: "Failed",
     },
     {
         id: 6,
         serial: 6,
-        instructor: "Rajibul Islam",
-        title: "The Perfect Nginx Server - Ubuntu (24.04...",
-        category: "Blockchain Develop",
-        price: 29.0,
-        visibility: "Approved",
-    },
-    {
-        id: 7,
-        serial: 7,
-        instructor: "Rajibul Islam",
-        title: "Introduction to Windows Server 2016 for...",
-        category: "Design System",
-        price: 45.0,
-        visibility: "Approved",
+        invoice: "#380632948",
+        student: "David Malan",
+        totalAmount: 20.00,
+        date: "18 Jan, 2025",
+        gateway: "Stripe",
+        payment: "Failed",
     },
 ]
 
-const CategoryList = () => {
+const FailedPayments = () => {
     const [entriesPerPage, setEntriesPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
+    const [showCreateNewCard, setShowCreateNewCard] = useState(false)
+  
     const navigate = useNavigate()
+
 
     const handleEntriesChange = (event) => {
         setEntriesPerPage(event.target.value)
@@ -106,26 +106,30 @@ const CategoryList = () => {
         setCurrentPage(value)
     }
 
-    const filteredData = courseData.filter(
-        (course) =>
-            course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.instructor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.category.toLowerCase().includes(searchTerm.toLowerCase()),
+    const filteredData = enrollmentData.filter(
+        (enrollment) =>
+            enrollment.invoice.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            enrollment.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            enrollment.gateway.toLowerCase().includes(searchTerm.toLowerCase()),
     )
 
-    const handleEditClick = (courseId) => {
-        navigate(`/admin/courses/create/`,{ state: { courseId } });
+    const handleDetailClick = (enrollmentId) => {
+        navigate(`/admin/enrollment-details?id=${enrollmentId}`);
     };
 
+     const handleCreateNewEnrollment = (newEnrollment) => {
+        // setEnrollmentData((prev) => [...prev, { ...newEnrollment, id: prev.length + 1 }])
+    }
+   
 
     return (
         <Box sx={{ py: 3,minWidth: 1350, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" ,right: 100 }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
-                    Course List
+                    Failled Payments
                 </Typography>
-                <Button
+                {/* <Button
                     variant="contained"
                     startIcon={<AddIcon />}
                     sx={{
@@ -140,10 +144,10 @@ const CategoryList = () => {
                             bgcolor: "#34495e",
                         },
                     }}
-                    onClick={() => window.location.href = '/admin/courses/create'}
+                    onClick={() => setShowCreateNewCard(true)}
                 >
                     Create New
-                </Button>
+                </Button> */}
             </Box>
 
             {/* Controls Section */}
@@ -213,7 +217,7 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Instructor
+                                        Invoice
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -222,7 +226,7 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Title
+                                        Student
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -231,7 +235,7 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Category
+                                        Total Amount
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -240,7 +244,7 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Price
+                                        Date
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -249,7 +253,16 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Visibility
+                                        Gateway
+                                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                                            <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
+                                            <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
+                                        </Box>
+                                    </Box>
+                                </TableCell>
+                                <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                                        Payment
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -261,16 +274,15 @@ const CategoryList = () => {
                                         Action
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
-                                            <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
                                         </Box>
                                     </Box>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {courseData.map((course) => (
+                            {enrollmentData.map((enrollment) => (
                                 <TableRow
-                                    key={course.id}
+                                    key={enrollment.id}
                                     sx={{
                                         "&:hover": {
                                             bgcolor: "grey.25",
@@ -281,43 +293,38 @@ const CategoryList = () => {
                                     }}
                                 >
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 600,fontSize: "0.875rem", color: "text.primary" }}>
-                                            {course.serial}
+                                        <Typography variant="body1" sx={{ fontWeight: 600, fontSize: "0.875rem", color: "text.primary" }}>
+                                            {enrollment.serial}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
-                                            {course.instructor}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell sx={{ py: 2.5, maxWidth: 300, }}>
-                                        <Typography
-                                            variant="body1"
-                                            sx={{
-                                                fontWeight: 600,
-                                                color: "text.primary",
-                                                fontSize: "0.875rem",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                whiteSpace: "nowrap",
-                                            }}
-                                        >
-                                            {course.title}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ color: "text.primary",fontWeight: 600, fontSize: "0.875rem" }}>
-                                            {course.category}
+                                            {enrollment.invoice}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
-                                            ${course.price.toFixed(2)}
+                                            {enrollment.student}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell sx={{ py: 2.5 }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
+                                            ${enrollment.totalAmount.toFixed(2)}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell sx={{ py: 2.5 }}>
+                                        <Typography variant="body1" sx={{ color: "text.primary", fontWeight: 600, fontSize: "0.875rem" }}>
+                                            {enrollment.date}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell sx={{ py: 2.5 }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
+                                            {enrollment.gateway}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Chip
-                                            label={course.visibility}
+                                            label={enrollment.payment}
                                             size="small"
                                             sx={{
                                                 bgcolor: "#d4edda",
@@ -336,7 +343,7 @@ const CategoryList = () => {
                                             <Button
                                                 variant="contained"
                                                 size="small"
-                                                startIcon={<EditIcon sx={{ fontSize: 16 }} />}
+                                                startIcon={<VisibilityIcon sx={{ fontSize: 16 }} />}
                                                 sx={{
                                                     bgcolor: "#374151",
                                                     color: "white",
@@ -351,9 +358,9 @@ const CategoryList = () => {
                                                         bgcolor: "#4b5563",
                                                     },
                                                 }}
-                                                onClick={() => handleEditClick(course.id)}
+                                                onClick={() => handleDetailClick(enrollment.id)}
                                             >
-                                                Edit
+                                                Detail
                                             </Button>
                                             <IconButton
                                                 size="small"
@@ -437,7 +444,8 @@ const CategoryList = () => {
                     </Button>
                 </Box>
             </Box>
+            {showCreateNewCard && <CreateNewEnrollment open={showCreateNewCard} onClose={() => setShowCreateNewCard(false)} onSave={handleCreateNewEnrollment} />}
         </Box>
     )
 }
-export default CategoryList
+export default FailedPayments

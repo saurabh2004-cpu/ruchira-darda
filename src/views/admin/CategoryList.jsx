@@ -111,7 +111,7 @@ const columns = [
             },
           }}
 
-          onClick={() => window.location.href = `/admin/edit-category/${info.getValue()}`}
+          onClick={() => window.location.href = `/admin/edit-category?id=${info.getValue()}`}
         >
           Edit
         </Button>
@@ -169,11 +169,7 @@ const CategoryList = () => {
 
   return (
     <Box
-      sx={{
-        p: { xs: 2, sm: 3, },
-        backgroundColor: "white",
-        minHeight: "100vh",
-      }}
+      sx={{ py: 3,minWidth: 1350, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" ,right: 100 }}
     >
       {/* Header */}
       <Box

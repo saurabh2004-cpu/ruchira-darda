@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import {
     Box,
@@ -17,81 +16,92 @@ import {
     Select,
     MenuItem,
     FormControl,
+    Icon,
 } from "@mui/material"
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
+import { Add as AddIcon, Visibility as VisibilityIcon, Delete as DeleteIcon, ArrowDropUp, ArrowDropDown, Edit } from "@mui/icons-material"
 import { useNavigate } from "react-router"
+import CreateNewEnrollment from "../../components/Enrollments/CreateNew"
+import EditCouponDetails from "../../components/coupons/EditCouponDetails"
+import { IconPencil } from "@tabler/icons"
 
-// Sample course data matching the image
-const courseData = [
+// Dummy coupon data
+const couponData = [
     {
         id: 1,
         serial: 1,
-        instructor: "Muhammad Yunus",
-        title: "Macro Photography & Focus Stacking Made...",
-        category: "Photography & Video",
-        price: 18.0,
-        visibility: "Approved",
+        code: "SAVE20",
+        offer: "20% Off",
+        endTime: "25 Mar, 2025",
+        status: "Active"
     },
     {
         id: 2,
         serial: 2,
-        instructor: "Ashif Mahmud",
-        title: "The Ultimate Photography Course For Begi...",
-        category: "Photography & Video",
-        price: 38.0,
-        visibility: "Approved",
+        code: "NEWUSER50",
+        offer: "$50 Off",
+        endTime: "30 Apr, 2025",
+        status: "Active"
     },
     {
         id: 3,
         serial: 3,
-        instructor: "Jubair Ahmed",
-        title: "Real Estate Photography Masterclass 2025",
-        category: "Photography & Video",
-        price: 25.0,
-        visibility: "Approved",
+        code: "SUMMER25",
+        offer: "25% Off",
+        endTime: "31 Aug, 2025",
+        status: "Active"
     },
     {
         id: 4,
         serial: 4,
-        instructor: "Jubair Ahmed",
-        title: "Learn Windows Server 2022 (AD, DNS, GPO)...",
-        category: "Blockchain Develop",
-        price: 30.0,
-        visibility: "Approved",
+        code: "FLASH10",
+        offer: "10% Off",
+        endTime: "15 Feb, 2025",
+        status: "Expired"
     },
     {
         id: 5,
         serial: 5,
-        instructor: "Jubair Ahmed",
-        title: "Real World Projects: Linux Training for...",
-        category: "Blockchain Develop",
-        price: 32.0,
-        visibility: "Approved",
+        code: "STUDENT30",
+        offer: "30% Off",
+        endTime: "31 Dec, 2025",
+        status: "Active"
     },
     {
         id: 6,
         serial: 6,
-        instructor: "Rajibul Islam",
-        title: "The Perfect Nginx Server - Ubuntu (24.04...",
-        category: "Blockchain Develop",
-        price: 29.0,
-        visibility: "Approved",
+        code: "WELCOME15",
+        offer: "15% Off",
+        endTime: "28 Feb, 2025",
+        status: "Inactive"
     },
     {
         id: 7,
         serial: 7,
-        instructor: "Rajibul Islam",
-        title: "Introduction to Windows Server 2016 for...",
-        category: "Design System",
-        price: 45.0,
-        visibility: "Approved",
+        code: "BULK100",
+        offer: "$100 Off",
+        endTime: "15 Jun, 2025",
+        status: "Active"
     },
+    {
+        id: 8,
+        serial: 8,
+        code: "EARLY40",
+        offer: "40% Off",
+        endTime: "10 Jan, 2025",
+        status: "Expired"
+    }
 ]
 
-const CategoryList = () => {
+const CouponList = () => {
     const [entriesPerPage, setEntriesPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
+    const [showCreateNewCard, setShowCreateNewCard] = useState(false)
+    const [showEditCouponModal,setShowEditCouponModal] = useState(false)
+    const [selectedCoupon, setSelectedCoupon] = useState(null)
+
+    
+  
     const navigate = useNavigate()
 
     const handleEntriesChange = (event) => {
@@ -106,24 +116,36 @@ const CategoryList = () => {
         setCurrentPage(value)
     }
 
-    const filteredData = courseData.filter(
-        (course) =>
-            course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.instructor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.category.toLowerCase().includes(searchTerm.toLowerCase()),
+    const filteredData = couponData.filter(
+        (coupon) =>
+            coupon.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            coupon.offer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            coupon.status.toLowerCase().includes(searchTerm.toLowerCase()),
     )
 
-    const handleEditClick = (courseId) => {
-        navigate(`/admin/courses/create/`,{ state: { courseId } });
-    };
+    const handleCreateNewCoupon = (newCoupon) => {
+        // setCouponData((prev) => [...prev, { ...newCoupon, id: prev.length + 1 }])
+    }
 
+    const getStatusChipColor = (status) => {
+        switch (status.toLowerCase()) {
+            case 'active':
+                return { bgcolor: "#d4edda", color: "#155724" }
+            case 'inactive':
+                return { bgcolor: "#fff3cd", color: "#856404" }
+            case 'expired':
+                return { bgcolor: "#f8d7da", color: "#721c24" }
+            default:
+                return { bgcolor: "#e2e3e5", color: "#383d41" }
+        }
+    }
 
     return (
         <Box sx={{ py: 3,minWidth: 1350, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" ,right: 100 }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
-                    Course List
+                    Coupon List
                 </Typography>
                 <Button
                     variant="contained"
@@ -140,7 +162,7 @@ const CategoryList = () => {
                             bgcolor: "#34495e",
                         },
                     }}
-                    onClick={() => window.location.href = '/admin/courses/create'}
+                    onClick={() => navigate('/admin/create-coupon')}
                 >
                     Create New
                 </Button>
@@ -213,7 +235,7 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Instructor
+                                        Code
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -222,7 +244,7 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Title
+                                        Offer
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -231,7 +253,7 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Category
+                                       End Time
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -240,37 +262,28 @@ const CategoryList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Price
+                                        Status
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
                                         </Box>
                                     </Box>
                                 </TableCell>
-                                <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
-                                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Visibility
-                                        <Box sx={{ display: "flex", flexDirection: "column" }}>
-                                            <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
-                                            <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
+                                
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                         Action
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
-                                            <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
                                         </Box>
                                     </Box>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {courseData.map((course) => (
+                            {filteredData.map((coupon) => (
                                 <TableRow
-                                    key={course.id}
+                                    key={coupon.id}
                                     sx={{
                                         "&:hover": {
                                             bgcolor: "grey.25",
@@ -281,47 +294,31 @@ const CategoryList = () => {
                                     }}
                                 >
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 600,fontSize: "0.875rem", color: "text.primary" }}>
-                                            {course.serial}
+                                        <Typography variant="body1" sx={{ fontWeight: 600, fontSize: "0.875rem", color: "text.primary" }}>
+                                            {coupon.serial}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
-                                            {course.instructor}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell sx={{ py: 2.5, maxWidth: 300, }}>
-                                        <Typography
-                                            variant="body1"
-                                            sx={{
-                                                fontWeight: 600,
-                                                color: "text.primary",
-                                                fontSize: "0.875rem",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                whiteSpace: "nowrap",
-                                            }}
-                                        >
-                                            {course.title}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ color: "text.primary",fontWeight: 600, fontSize: "0.875rem" }}>
-                                            {course.category}
+                                            {coupon.code}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
-                                            ${course.price.toFixed(2)}
+                                            {coupon.offer}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell sx={{ py: 2.5 }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
+                                            {coupon.endTime}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Chip
-                                            label={course.visibility}
+                                            label={coupon.status}
                                             size="small"
                                             sx={{
-                                                bgcolor: "#d4edda",
-                                                color: "#155724",
+                                                ...getStatusChipColor(coupon.status),
                                                 fontWeight: 500,
                                                 borderRadius: 1,
                                                 fontSize: "0.85rem",
@@ -336,7 +333,7 @@ const CategoryList = () => {
                                             <Button
                                                 variant="contained"
                                                 size="small"
-                                                startIcon={<EditIcon sx={{ fontSize: 16 }} />}
+                                                startIcon={<VisibilityIcon sx={{ fontSize: 16 }} />}
                                                 sx={{
                                                     bgcolor: "#374151",
                                                     color: "white",
@@ -351,10 +348,32 @@ const CategoryList = () => {
                                                         bgcolor: "#4b5563",
                                                     },
                                                 }}
-                                                onClick={() => handleEditClick(course.id)}
+                                                onClick={() => navigate(`/admin/coupon-details?id=${coupon.id}`)}
                                             >
-                                                Edit
+                                                Detail
                                             </Button>
+                                            {/* <IconButton
+                                                variant="contained"
+                                                size="small"
+                                                startIcon={<VisibilityIcon sx={{ fontSize: 16 }} />}
+                                                sx={{
+                                                    bgcolor: "#374151",
+                                                    color: "white",
+                                                    textTransform: "none",
+                                                    borderRadius: 1.5,
+                                                    px: 2,
+                                                    py: 1,
+                                                    fontSize: "0.85rem",
+                                                    fontWeight: 500,
+                                                    minWidth: "auto",
+                                                    "&:hover": {
+                                                        bgcolor: "#4b5563",
+                                                    },
+                                                }}
+                                                onClick={() => setShowEditCouponModal(true)}
+                                            >
+                                                <IconPencil sx={{ fontSize: 18 }} />
+                                            </IconButton> */}
                                             <IconButton
                                                 size="small"
                                                 sx={{
@@ -437,7 +456,9 @@ const CategoryList = () => {
                     </Button>
                 </Box>
             </Box>
+            {showCreateNewCard && <CreateNewEnrollment open={showCreateNewCard} onClose={() => setShowCreateNewCard(false)} onSave={handleCreateNewCoupon} />}
+            {/* {showEditCouponModal && <EditCouponDetails open={showEditCouponModal} onClose={() => setShowEditCouponModal(false)} onSave={handleEditCoupon} couponData={selectedCoupon} />} */}
         </Box>
     )
 }
-export default CategoryList
+export default CouponList

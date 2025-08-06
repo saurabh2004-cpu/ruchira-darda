@@ -20,7 +20,7 @@ const CreateCourse = () => {
     { label: "Seo Setup", active: false, completed: false },
   ];
 
-  const [step, setStep] = useState('Curriculum');
+  const [step, setStep] = useState('Basic Information');
   return (
     <>
     <BreadCrumb steps={steps} setStep={setStep}/>

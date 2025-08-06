@@ -88,7 +88,7 @@ const courseData = [
     },
 ]
 
-const CategoryList = () => {
+const PendingCourses = () => {
     const [entriesPerPage, setEntriesPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
@@ -119,7 +119,7 @@ const CategoryList = () => {
 
 
     return (
-        <Box sx={{ py: 3,minWidth: 1350, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" ,right: 100 }}>
+        <Box ssx={{ py: 3,minWidth: 1550, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" ,right: 100 }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
@@ -281,22 +281,21 @@ const CategoryList = () => {
                                     }}
                                 >
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 600,fontSize: "0.875rem", color: "text.primary" }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
                                             {course.serial}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 500, color: "text.primary" }}>
                                             {course.instructor}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell sx={{ py: 2.5, maxWidth: 300, }}>
+                                    <TableCell sx={{ py: 2.5, maxWidth: 300 }}>
                                         <Typography
                                             variant="body1"
                                             sx={{
-                                                fontWeight: 600,
+                                                fontWeight: 500,
                                                 color: "text.primary",
-                                                fontSize: "0.875rem",
                                                 overflow: "hidden",
                                                 textOverflow: "ellipsis",
                                                 whiteSpace: "nowrap",
@@ -306,12 +305,12 @@ const CategoryList = () => {
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ color: "text.primary",fontWeight: 600, fontSize: "0.875rem" }}>
+                                        <Typography variant="body1" sx={{ color: "text.primary" }}>
                                             {course.category}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 500, color: "text.primary" }}>
                                             ${course.price.toFixed(2)}
                                         </Typography>
                                     </TableCell>
@@ -440,4 +439,4 @@ const CategoryList = () => {
         </Box>
     )
 }
-export default CategoryList
+export default PendingCourses
