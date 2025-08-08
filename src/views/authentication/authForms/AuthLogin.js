@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-Box,
+  Box,
   Typography,
   FormGroup,
   FormControlLabel,
@@ -9,96 +9,129 @@ Box,
   Divider,
   Alert,
 } from '@mui/material';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 
 import CustomCheckbox from '../../../components/forms/theme-elements/CustomCheckbox';
 import CustomTextField from '../../../components/forms/theme-elements/CustomTextField';
 import CustomFormLabel from '../../../components/forms/theme-elements/CustomFormLabel';
-
+import axiosInstance from '../../../axios/axios';
+import { useDispatch, useSelector } from 'react-redux';
 import AuthSocialButtons from './AuthSocialButtons';
+import { login } from '../../../store/authSlice';
 
-const AuthLogin = ({ title, subtitle, subtext }) => (
-  <>
-    {title ? (
-      <Typography fontWeight="700" variant="h3" mb={1}>
-        {title}
-      </Typography>
-    ) : null}
+const AuthLogin = ({ title, subtitle, subtext }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const navigate = useNavigate();
 
-    {subtext}
+  const dispatch = useDispatch();
 
-    <Box mt={2} mb={3}>
-        <Alert severity="info">
-          Demo Login: Use <strong>demo1234@gmail.com</strong> and password{" "}
-          <strong>demo1234</strong> to sign in.
-        </Alert>
-      </Box>
-      {/* {error && (
+  const [error, setError] = useState(null);
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.post('/api/user/admin/signin', formData,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      const userData = response.data.user;
+      console.log('Login success:', userData);
+      dispatch(login(userData));
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      navigate('/')
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+    }
+  };
+
+ 
+  return (
+    <>
+      {title && (
+        <Typography fontWeight="700" variant="h3" mb={1}>
+          {title}
+        </Typography>
+      )}
+
+      {subtext}
+
+      {error && (
         <Box mt={2}>
           <Alert severity="error">{error}</Alert>
         </Box>
-      )} */}
+      )}
 
-
-    <Box mt={3}>
-      <Divider>
-        <Typography
-          component="span"
-          color="textSecondary"
-          variant="h6"
-          fontWeight="400"
-          position="relative"
-          px={2}
-        >
-          or sign in with
-        </Typography>
-      </Divider>
-    </Box>
-
-    <Stack>
-      <Box>
-        <CustomFormLabel htmlFor="username">Username</CustomFormLabel>
-        <CustomTextField id="username" variant="outlined" fullWidth />
-      </Box>
-      <Box>
-        <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
-        <CustomTextField id="password" type="password" variant="outlined" fullWidth />
-      </Box>
-      <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
-        <FormGroup>
-          <FormControlLabel
-            control={<CustomCheckbox defaultChecked />}
-            label="Remeber this Device"
+      <Stack component="form" >
+        <Box>
+          <CustomFormLabel htmlFor="email">Email</CustomFormLabel>
+          <CustomTextField
+            id="email"
+            variant="outlined"
+            fullWidth
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
           />
-        </FormGroup>
-        <Typography
-          component={Link}
-          to="/auth/forgot-password"
-          fontWeight="500"
-          sx={{
-            textDecoration: 'none',
-            color: 'primary.main',
-          }}
+        </Box>
+        <Box>
+          <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
+          <CustomTextField
+            id="password"
+            type="password"
+            variant="outlined"
+            fullWidth
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
+        </Box>
+
+        <Stack
+          justifyContent="space-between"
+          direction="row"
+          alignItems="center"
+          my={2}
         >
-          Forgot Password ?
-        </Typography>
+          <FormGroup>
+            <FormControlLabel
+              control={<CustomCheckbox defaultChecked />}
+              label="Remember this Device"
+            />
+          </FormGroup>
+          <Typography
+            component={Link}
+            to="/auth/forgot-password"
+            fontWeight="500"
+            sx={{
+              textDecoration: 'none',
+              color: 'primary.main',
+            }}
+          >
+            Forgot Password?
+          </Typography>
+        </Stack>
+
+        <Box>
+          <Button
+            color="primary"
+            variant="contained"
+            size="large"
+            fullWidth
+            onClick={(e) => handleSignIn(e)}
+          >
+            Sign In
+          </Button>
+        </Box>
       </Stack>
-    </Stack>
-    <Box>
-      <Button
-        color="primary"
-        variant="contained"
-        size="large"
-        fullWidth
-        component={Link}
-        to="/"
-        type="submit"
-      >
-        Sign In
-      </Button>
-    </Box>
-    {subtitle}
-  </>
-);
+
+      {subtitle}
+    </>
+  );
+};
 
 export default AuthLogin;

@@ -104,7 +104,8 @@ const NavCollapse = ({ menu, level, pathWithoutLastPart, pathDirect, onClick, hi
         >
           {menuIcon}
         </ListItemIcon>
-        <ListItemText color="#343088">{hideMenu ? '' : <>{t(`${menu.title}`)}</>}</ListItemText>
+        {/* //sidebar courses/listings */}
+        <ListItemText color="#343088" backgroundColor="#343088">{hideMenu ? '' : <>{t(`${menu.title}`)}</>}</ListItemText>  
         {!open ? <IconChevronDown size="1rem" /> : <IconChevronUp size="1rem" />}
       </ListItemStyled>
       <Collapse in={open} timeout="auto" unmountOnExit>

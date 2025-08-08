@@ -18,7 +18,7 @@ import { Close as CloseIcon } from "@mui/icons-material";
 import Alert from "@mui/material/Alert";
 import axiosInstance from "../../axios/axios";
 
-const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList ,selectedModule}) => {
+const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList, selectedModule }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -48,23 +48,23 @@ const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList ,s
   const validate = () => {
     const newErrors = {
       moduleName: formData.moduleName.trim() === "",
-      serial: formData.serial.trim() === "",
+      serial: formData.serial,
     };
     setErrors(newErrors);
     return !newErrors.moduleName && !newErrors.serial;
   };
 
-  const handleCreateModule = async () => {
+  const handleEditModule = async () => {
     if (!validate()) return;
     console.log("formData", formData);
     try {
-      const resp = await axiosInstance.put(`/api/module/update-module/${courseId}`, formData, {
+      const resp = await axiosInstance.put(`/api/module//update-module/${selectedModule._id}`, {
         headers: {
           "Content-Type": "application/json",
         },
         formData
       });
-      console.log("Module created:", resp);
+      console.log("Module updated:", resp);
       setModuleList((prevModules) => [...prevModules, resp.data.module]);
 
       if (onSave) onSave();
@@ -211,7 +211,7 @@ const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList ,s
         <Button
           fullWidth
           variant="contained"
-          onClick={handleCreateModule}
+          onClick={handleEditModule}
           sx={{
             py: 2,
             borderRadius: 2,

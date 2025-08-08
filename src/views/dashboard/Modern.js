@@ -14,8 +14,13 @@ import SellingProducts from '../../components/dashboards/modern/SellingProducts'
 import WeeklyStats from '../../components/dashboards/modern/WeeklyStats';
 import TopPerformers from '../../components/dashboards/modern/TopPerformers';
 import Welcome from 'src/layouts/full/shared/welcome/Welcome';
+import { useSelector } from 'react-redux';
 
 const Modern = () => {
+  const user = useSelector((state) => state.auth.userData);
+  console.log("user", user);
+
+  console.log("current user :", user);
   return (
     <Box>
       <Grid container spacing={3}>

@@ -18,7 +18,7 @@ const AuthRegister = ({ title, subtitle, subtext }) => (
     {subtext}
     <AuthSocialButtons title="Sign up with" />
 
-    <Box mt={3}>
+    {/* <Box mt={3}>
       <Divider>
         <Typography
           component="span"
@@ -31,7 +31,7 @@ const AuthRegister = ({ title, subtitle, subtext }) => (
           or sign up with
         </Typography>
       </Divider>
-    </Box>
+    </Box> */}
 
     <Box>
       <Stack mb={3}>

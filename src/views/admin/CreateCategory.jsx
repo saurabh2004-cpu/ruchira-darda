@@ -2,15 +2,61 @@ import { Box, Button, Grid, IconButton, InputLabel, TextField, Typography, Switc
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ListIcon from "@mui/icons-material/List";
 import { useState } from "react";
+import axiosInstance from "../../axios/axios";
+import { set } from "lodash";
 
 export default function CreateCategory() {
   const [image, setImage] = useState(null);
   const [visibility, setVisibility] = useState(false);
+  const [slug, setSlug] = useState('')
+  const [error, setError] = useState('')
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
+
+  const [formData, setFormData] = useState({
+    categoryName: '',
+    slug: slug,
+    status: true
+  })
+
+  const handleSlugChange = (categoryName) => {
+    const slug = categoryName
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^\w-]+/g, "");
+    setSlug(slug);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      slug,
+      categoryName
+    }));
   };
+
+
+  const handleCreateCategory = async (e) => {
+    e.preventDefault()
+
+    console.log("formData", formData)
+
+    try {
+      const res = await axiosInstance.post('/api/categories/create-category', formData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      console.log("category created", res.status)
+      if (res.status === 200) {
+        setFormData({
+          categoryName: '',
+          slug: '',
+          status: true
+        })
+        setSlug('')
+      }
+    } catch (error) {
+      setError("Error creating category")
+      console.error("Error creating category", error)
+    }
+  }
 
   return (
     <Box
@@ -44,7 +90,7 @@ export default function CreateCategory() {
       {/* Form */}
       <Grid container spacing={4} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {/* Image Upload */}
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <InputLabel required>Image</InputLabel>
           <Box
             display="flex"
@@ -76,28 +122,32 @@ export default function CreateCategory() {
               and upload
             </Typography>
           </Box>
-        </Grid>
+        </Grid> */}
 
         {/* Inputs and Switch */}
         <Grid item xs={12} md={8} sx={{ width: 500 }}>
           <Grid container spacing={3} sx={{ flexDirection: "column", gap: 3 }}>
             <label htmlFor="category-name" style={{ fontWeight: 600 }}>
-             Name
+              category Name
             </label>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                xs={{ border:'none' }}
+                value={formData.categoryName}
+                xs={{ border: 'none' }}
+                onChange={(e) => handleSlugChange(e.target.value)}
               />
             </Grid>
             <label htmlFor="category-name" style={{ fontWeight: 600 }}>
-             slug
+              slug
             </label>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
+                disabled
+                value={slug}
               />
             </Grid>
 
@@ -108,7 +158,13 @@ export default function CreateCategory() {
               </Typography>
               <Switch
                 checked={visibility}
-                onChange={(e) => setVisibility(e.target.checked)}
+                onChange={(e) => {
+                  setVisibility(e.target.checked)
+                  setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    status: e.target.checked,
+                  }));
+                }}
                 color="primary"
               />
             </Grid>
@@ -128,6 +184,7 @@ export default function CreateCategory() {
                     backgroundColor: "#0d1620",
                   },
                 }}
+                onClick={(e) => handleCreateCategory(e)}
               >
                 Save
               </Button>

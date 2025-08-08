@@ -25,6 +25,7 @@ const ImageAndVideo = ({ formData, setFormData, setStep, setCourseId }) => {
   const [thumbnailImage, setThumbnailImage] = useState('https://educve-laravel.themedox.com/uploads/custom-images/course-thumb-2025-02-13-02-28-40-9348.webp');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  
 
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     Box,
     Typography,
@@ -20,79 +20,86 @@ import {
 } from "@mui/material"
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
 import { useNavigate } from "react-router"
+import axiosInstance from "../../axios/axios"
+import { useSelector } from "react-redux"
 
 // Sample course data matching the image
-const courseData = [
-    {
-        id: 1,
-        serial: 1,
-        instructor: "Muhammad Yunus",
-        title: "Macro Photography & Focus Stacking Made...",
-        category: "Photography & Video",
-        price: 18.0,
-        visibility: "Approved",
-    },
-    {
-        id: 2,
-        serial: 2,
-        instructor: "Ashif Mahmud",
-        title: "The Ultimate Photography Course For Begi...",
-        category: "Photography & Video",
-        price: 38.0,
-        visibility: "Approved",
-    },
-    {
-        id: 3,
-        serial: 3,
-        instructor: "Jubair Ahmed",
-        title: "Real Estate Photography Masterclass 2025",
-        category: "Photography & Video",
-        price: 25.0,
-        visibility: "Approved",
-    },
-    {
-        id: 4,
-        serial: 4,
-        instructor: "Jubair Ahmed",
-        title: "Learn Windows Server 2022 (AD, DNS, GPO)...",
-        category: "Blockchain Develop",
-        price: 30.0,
-        visibility: "Approved",
-    },
-    {
-        id: 5,
-        serial: 5,
-        instructor: "Jubair Ahmed",
-        title: "Real World Projects: Linux Training for...",
-        category: "Blockchain Develop",
-        price: 32.0,
-        visibility: "Approved",
-    },
-    {
-        id: 6,
-        serial: 6,
-        instructor: "Rajibul Islam",
-        title: "The Perfect Nginx Server - Ubuntu (24.04...",
-        category: "Blockchain Develop",
-        price: 29.0,
-        visibility: "Approved",
-    },
-    {
-        id: 7,
-        serial: 7,
-        instructor: "Rajibul Islam",
-        title: "Introduction to Windows Server 2016 for...",
-        category: "Design System",
-        price: 45.0,
-        visibility: "Approved",
-    },
-]
+// const courseData = [
+//     {
+//         id: 1,
+//         serial: 1,
+//         instructor: "Muhammad Yunus",
+//         title: "Macro Photography & Focus Stacking Made...",
+//         category: "Photography & Video",
+//         price: 18.0,
+//         visibility: "Approved",
+//     },
+//     {
+//         id: 2,
+//         serial: 2,
+//         instructor: "Ashif Mahmud",
+//         title: "The Ultimate Photography Course For Begi...",
+//         category: "Photography & Video",
+//         price: 38.0,
+//         visibility: "Approved",
+//     },
+//     {
+//         id: 3,
+//         serial: 3,
+//         instructor: "Jubair Ahmed",
+//         title: "Real Estate Photography Masterclass 2025",
+//         category: "Photography & Video",
+//         price: 25.0,
+//         visibility: "Approved",
+//     },
+//     {
+//         id: 4,
+//         serial: 4,
+//         instructor: "Jubair Ahmed",
+//         title: "Learn Windows Server 2022 (AD, DNS, GPO)...",
+//         category: "Blockchain Develop",
+//         price: 30.0,
+//         visibility: "Approved",
+//     },
+//     {
+//         id: 5,
+//         serial: 5,
+//         instructor: "Jubair Ahmed",
+//         title: "Real World Projects: Linux Training for...",
+//         category: "Blockchain Develop",
+//         price: 32.0,
+//         visibility: "Approved",
+//     },
+//     {
+//         id: 6,
+//         serial: 6,
+//         instructor: "Rajibul Islam",
+//         title: "The Perfect Nginx Server - Ubuntu (24.04...",
+//         category: "Blockchain Develop",
+//         price: 29.0,
+//         visibility: "Approved",
+//     },
+//     {
+//         id: 7,
+//         serial: 7,
+//         instructor: "Rajibul Islam",
+//         title: "Introduction to Windows Server 2016 for...",
+//         category: "Design System",
+//         price: 45.0,
+//         visibility: "Approved",
+//     },
+// ]
 
 const CategoryList = () => {
     const [entriesPerPage, setEntriesPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const navigate = useNavigate()
+    // const user  = useSelector((state) => state.auth.user);
+    // console.log("user:", user);
+    const value = localStorage.getItem('user');
+    const user = JSON.parse(value);
+    const [courseData, setCourseData] = useState([]);
 
     const handleEntriesChange = (event) => {
         setEntriesPerPage(event.target.value)
@@ -109,7 +116,6 @@ const CategoryList = () => {
     const filteredData = courseData.filter(
         (course) =>
             course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.instructor.toLowerCase().includes(searchTerm.toLowerCase()) ||
             course.category.toLowerCase().includes(searchTerm.toLowerCase()),
     )
 
@@ -117,6 +123,20 @@ const CategoryList = () => {
         navigate(`/admin/courses/create/`, { state: { courseId } });
     };
 
+    const fetchCourses = async () => {
+        try {
+            const response = await axiosInstance(`/api/course/list-courses/${user._id}`);
+            console.log("courses fetched:", response.data);
+            setCourseData(response.data.courses);
+        } catch (error) {
+            console.error("Error fetching courses:", error);
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        fetchCourses()
+    }, []);
 
     return (
         <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative", }}>
@@ -212,15 +232,7 @@ const CategoryList = () => {
                                         </Box>
                                     </Box>
                                 </TableCell>
-                                <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
-                                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                        Instructor
-                                        <Box sx={{ display: "flex", flexDirection: "column" }}>
-                                            <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
-                                            <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
-                                        </Box>
-                                    </Box>
-                                </TableCell>
+                               
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                         Title
@@ -271,7 +283,7 @@ const CategoryList = () => {
                         <TableBody>
                             {courseData.map((course) => (
                                 <TableRow
-                                    key={course.id}
+                                    key={course._id}
                                     sx={{
                                         "&:hover": {
                                             bgcolor: "grey.25",
@@ -286,11 +298,7 @@ const CategoryList = () => {
                                             {course.serial}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
-                                            {course.instructor}
-                                        </Typography>
-                                    </TableCell>
+                                    
                                     <TableCell sx={{ py: 2.5, maxWidth: 300, }}>
                                         <Typography
                                             variant="body1"
@@ -313,12 +321,12 @@ const CategoryList = () => {
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
-                                            ${course.price.toFixed(2)}
+                                            ${course?.regularPrice?.toFixed(2)}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Chip
-                                            label={course.visibility}
+                                            label={course.visibility ===true ?'Public':"Private"}
                                             size="small"
                                             sx={{
                                                 bgcolor: "#d4edda",

@@ -221,7 +221,7 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Logout',
     icon: IconFileText,
-    href: '/admin/logout',
+    href: '/admin/login',
   },
   
 

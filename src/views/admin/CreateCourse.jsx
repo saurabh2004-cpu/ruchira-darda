@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BasicLayout from '../../components/forms/form-vertical/BasicLayout';
 import BreadCrumb from './BreadCrumb';
-import { Card } from '@mui/material';
+import { Card, FormControl, MenuItem, Select } from '@mui/material';
 import ImageAndVideo from '../../components/Courses/ImageAndVideo';
 import ModuleListTable from '../../components/Courses/ModuleList';
 import SeoSetupForm from '../../components/Courses/SeoSetup';
@@ -14,21 +14,26 @@ import CustomTextField from '../../components/forms/theme-elements/CustomTextFie
 import CustomOutlinedInput from '../../components/forms/theme-elements/CustomOutlinedInput';
 import TiptapEdit from '../../views/forms/from-tiptap/TiptapEdit';
 import { set } from 'lodash';
+import axiosInstance from '../../axios/axios';
 
 const CreateCourse = () => {
   const location = useLocation();
   const [step, setStep] = useState('Basic Information');
   const [slug, setSlug] = useState('');
   const [courseId, setCourseId] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState('');
+
 
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
+    serial: 0,
     regularPrice: 0,
     offerPrice: 0,
     category: '',
     courseLevel: '',
-    CourseLanguage: '',
+    courseLanguage: '',
     totalLesson: '',
     totalDuration: '',
     shortDescription: '',
@@ -59,14 +64,26 @@ const CreateCourse = () => {
     }));
   };
 
-  const handleCreateCourse = (data) => {
-    // Handle form submission logic here
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axiosInstance.get('/api/categories/list-categories',
+        { withCredentials: true }
+      );
+      setCategories(res.data.categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setError(error.message || "Failed to fetch categories");
+    }
   }
 
+  useEffect(() => {
+    fetchCategories();
+  }, [])
 
   return (
     <>
-      
+      <BreadCrumb step={step} steps={steps} />
       {step === "Basic Information" && (
         <div>
           <Grid container>
@@ -103,6 +120,21 @@ const CreateCourse = () => {
                 disabled
               />
             </Grid>
+            {/* serial */}
+            <Grid size={12} display="flex" alignItems="center">
+              <CustomFormLabel htmlFor="bl-company">serial</CustomFormLabel>
+            </Grid>
+            <Grid size={12}>
+              <CustomTextField
+                id="bl-company"
+                fullWidth
+                value={formData.serial}
+                onChange={e => setFormData(prev => ({
+                  ...prev,
+                  serial: e.target.value
+                }))}
+              />
+            </Grid>
             {/* Regular Price */}
             <Grid size={12} display="flex" alignItems="center">
               <CustomFormLabel htmlFor="bl-company">Regular Price</CustomFormLabel>
@@ -135,48 +167,89 @@ const CreateCourse = () => {
             </Grid>
             {/* Category */}
             <Grid size={12} display="flex" alignItems="center">
-              <CustomFormLabel htmlFor="bl-email">Category</CustomFormLabel>
+              <CustomFormLabel htmlFor="bl-category">Category</CustomFormLabel>
             </Grid>
             <Grid size={12}>
-              <CustomTextField
-                id="bl-email"
-                fullWidth
-                value={formData.category}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  category: e.target.value
-                }))}
-              />
+              <FormControl fullWidth>
+                <Select
+                  id="bl-category"
+                  value={formData.category}
+                  onChange={e => setFormData(prev => ({
+                    ...prev,
+                    category: e.target.value
+                  }))}
+                  displayEmpty
+                >
+                  <MenuItem value="" disabled>
+                    <em>Select Category</em>
+                  </MenuItem>
+                  {categories.length > 0 ? categories.map(category =>
+                  (<MenuItem value={category._id} key={category._id}
+                    onClick={() => setFormData(prev => ({ ...prev, category: category._id }))}>
+                    {category.categoryName}
+                  </MenuItem>
+                  ))
+                    : (
+                      <MenuItem value="" disabled>
+                        <em>No categories available, please create one</em>
+                      </MenuItem>
+                    )
+                  }
+                </Select>
+              </FormControl>
             </Grid>
             {/* Course Level */}
             <Grid size={12} display="flex" alignItems="center">
-              <CustomFormLabel htmlFor="bl-phone">Course Level</CustomFormLabel>
+              <CustomFormLabel htmlFor="bl-category">Course Level</CustomFormLabel>
             </Grid>
             <Grid size={12}>
-              <CustomTextField
-                id="bl-phone"
-                fullWidth
-                value={formData.courseLevel}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  courseLevel: e.target.value
-                }))}
-              />
+              <FormControl fullWidth>
+                <Select
+                  id="bl-category"
+                  value={formData.courseLevel}
+                  onChange={e => setFormData(prev => ({
+                    ...prev,
+                    courseLevel: e.target.value
+                  }))}
+                  displayEmpty
+                >
+                  <MenuItem value="" disabled>
+                    <em>Select Language</em>
+                  </MenuItem>
+                  <MenuItem value="begginer">Beginner Level</MenuItem>
+                  <MenuItem value="intermediate">Intermediate Level</MenuItem>
+                  <MenuItem value="Expert">Expert Level</MenuItem>
+                  {/* Add more options as needed */}
+                </Select>
+              </FormControl>
             </Grid>
             {/* Course Language */}
             <Grid size={12} display="flex" alignItems="center">
-              <CustomFormLabel htmlFor="bl-message">Course Language</CustomFormLabel>
+              <CustomFormLabel htmlFor="bl-category">Language</CustomFormLabel>
             </Grid>
             <Grid size={12}>
-              <CustomTextField
-                id="bl-message"
-                fullWidth
-                value={formData.CourseLanguage}
-                onChange={e => setFormData(prev => ({
-                  ...prev,
-                  CourseLanguage: e.target.value
-                }))}
-              />
+              <FormControl fullWidth>
+                <Select
+                  id="bl-category"
+                  value={formData.courseLanguage}
+                  nChange={e => {
+                    console.log('Selected language:', e.target.value);
+                    setFormData(prev => ({
+                      ...prev,
+                      courseLanguage: e.target.value
+                    }));
+                  }}
+                  displayEmpty
+                >
+                  <MenuItem value="" disabled>
+                    <em>Select Language</em>
+                  </MenuItem>
+                  <MenuItem value="english">English</MenuItem>
+                  <MenuItem value="hindi">Hindi</MenuItem>
+                  <MenuItem value="marathi">Marathi</MenuItem>
+                  {/* Add more options as needed */}
+                </Select>
+              </FormControl>
             </Grid>
             {/* Total Lessons */}
             <Grid size={12} display="flex" alignItems="center">
@@ -245,11 +318,10 @@ const CreateCourse = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => {
+                onClick={(e) => {
                   setStep("Image And Video");
-                  console.log("formData", formData);
                 }}
-                  sx={{ backgroundColor: "#343088" }}
+                sx={{ backgroundColor: "#343088" }}
               >
                 Save And Next
               </Button>
@@ -259,10 +331,10 @@ const CreateCourse = () => {
       )}
 
       {step === "Image And Video" && <>
-        <ImageAndVideo formData={formData} setFormData={setFormData} setStep={setStep} setCourseId={setCourseId}/>
+        <ImageAndVideo formData={formData} setFormData={setFormData} setStep={setStep} setCourseId={setCourseId} />
       </>}
 
-      {step === "Curriculum" && <ModuleListTable courseId={courseId} setStep={setStep}/>}
+      {step === "Curriculum" && <ModuleListTable courseId={courseId} setStep={setStep} />}
 
       {step === "Seo Setup" && <SeoSetupForm />}
 

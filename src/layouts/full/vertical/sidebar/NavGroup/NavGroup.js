@@ -14,6 +14,7 @@ const NavGroup = ({ item, hideMenu }) => {
       lineHeight: '26px',
       padding: '3px 12px',
       marginLeft: hideMenu ? '' : '-10px',
+      
     }),
   );
   return (

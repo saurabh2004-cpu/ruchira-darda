@@ -35,6 +35,7 @@ const ContactMessage = Loadable(lazy(() => import('../views/admin/ContactMessage
 const Announcements = Loadable(lazy(() => import('../views/admin/Announcements')));
 
 const ModuleList = Loadable(lazy(() => import('../components/Courses/ModuleList')));
+const Login = Loadable(lazy(() => import('../views/authentication/auth1/Login')));
 
 // import ModernDash from '../views/dashboard/Modern';
 // import CategoryList from '../views/admin/CategoryList';
@@ -61,10 +62,13 @@ const ModuleList = Loadable(lazy(() => import('../components/Courses/ModuleList'
 // import Announcements from '../views/admin/Announcements';
 
 const Router = [
+  { path: '/auth/login', element: <Login /> },
   {
     path: '/',
     element: <FullLayout />,
     children: [
+
+
       { path: '/', element: <Navigate to="admin/dashboard" /> },
       { path: '/admin/dashboard', exact: true, element: <ModernDash /> },
 
@@ -97,7 +101,7 @@ const Router = [
 
       { path: '/admin/contact-message', exact: true, element: <ContactMessage /> },
 
-      { path: '/admin/announcement', exact: true, element: <Announcements />  },
+      { path: '/admin/announcement', exact: true, element: <Announcements /> },
     ],
   },
 ];
