@@ -11,6 +11,11 @@ export default defineConfig({
       src: resolve(__dirname, 'src'),
     },
   },
+  build: {
+    rollupOptions: {
+      external: ['react-syntax-highlighter'],
+    },
+  },
   esbuild: {
     loader: 'jsx',
     include: /src\/.*\.jsx?$/,

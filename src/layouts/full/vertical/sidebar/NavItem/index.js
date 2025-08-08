@@ -67,16 +67,16 @@ const NavItem = ({ item, level, pathDirect, onClick, hideMenu }) => {
             color:
               level > 1 && pathDirect === item.href
                 ? `${theme.palette.primary.main}!important`
-                : 'inherit',
+                : '#343088',
           }}
         >
           {itemIcon}
         </ListItemIcon>
-        <ListItemText>
+        <ListItemText sx={{":hover": { color: "#343088" }}}>
           {hideMenu ? '' : <>{t(`${item.title}`)}</>}
           <br />
           {item.subtitle ? (
-            <Typography variant="caption">{hideMenu ? '' : item.subtitle}</Typography>
+            <Typography sx={{":hover": { backgroundColor: "#343088" }}} variant="caption">{hideMenu ? '' : item.subtitle}</Typography>
           ) : (
             ''
           )}
@@ -84,10 +84,11 @@ const NavItem = ({ item, level, pathDirect, onClick, hideMenu }) => {
 
         {!item.chip || hideMenu ? null : (
           <Chip
-            color={item.chipColor}
+            color={item.chipcolor ? item.chipcolor : 'primary'}
             variant={item.variant ? item.variant : 'filled'}
             size="small"
             label={item.chip}
+             sx={{ backgroundColor: '#d5b168' }}
           />
         )}
       </ListItemStyled>

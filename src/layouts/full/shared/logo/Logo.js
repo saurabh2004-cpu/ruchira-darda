@@ -7,6 +7,8 @@ import { ReactComponent as LogoLight } from 'src/assets/images/logos/light-logo.
 import { ReactComponent as LogoLightRTL } from 'src/assets/images/logos/light-logo-rtl.svg';
 import { styled } from '@mui/material';
 import { useContext } from 'react'
+import logoPng from 'src/assets/images/logos/ruchira-darda-01.png';
+
 
 const Logo = () => {
   const { isCollapse, isSidebarHover, activeDir, activeMode } = useContext(CustomizerContext);
@@ -26,9 +28,23 @@ const Logo = () => {
         alignItems: 'center',
       }}>
         {activeMode === 'dark' ? (
-          <LogoLight />
+          <LinkStyled to="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={logoPng}
+              alt="Ruchira Darda Logo"
+              height={100} // adjust as needed
+              style={{ objectFit: 'contain' }}
+            />
+          </LinkStyled>
         ) : (
-          <LogoDark />
+          <LinkStyled to="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={logoPng}
+              alt="Ruchira Darda Logo"
+              height={140} // adjust as needed
+              style={{ objectFit: 'contain' }}
+            />
+          </LinkStyled>
         )}
       </LinkStyled>
     );

@@ -6,10 +6,7 @@ import './utils/i18n';
 import { CustomizerContextProvider } from './context/CustomizerContext';
 
 async function deferRender() {
-  const { worker } = await import("./api/mocks/browser");
-  return worker.start({
-    onUnhandledRequest: 'bypass',
-  });
+ ;
 }
 
 deferRender().then(() => {

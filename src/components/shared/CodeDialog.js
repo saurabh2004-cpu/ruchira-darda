@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { IconCode, IconX } from "@tabler/icons";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+// import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+// import 'react-syntax-highlighter/dist/esm/styles/hljs';
+// import 'react-syntax-highlighter/dist/esm/styles/hljs.css';
 
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";

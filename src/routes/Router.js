@@ -34,6 +34,8 @@ const StudentProfile = Loadable(lazy(() => import('../views/admin/StudentProfile
 const ContactMessage = Loadable(lazy(() => import('../views/admin/ContactMessage')));
 const Announcements = Loadable(lazy(() => import('../views/admin/Announcements')));
 
+const ModuleList = Loadable(lazy(() => import('../components/Courses/ModuleList')));
+
 // import ModernDash from '../views/dashboard/Modern';
 // import CategoryList from '../views/admin/CategoryList';
 // import CreateCategory from '../views/admin/CreateCategory';
@@ -73,6 +75,8 @@ const Router = [
       { path: '/admin/courses/create', exact: true, element: <CreateCourse /> },
       { path: '/admin/courses', exact: true, element: <CourseList /> },
       { path: '/admin/courses/pending', exact: true, element: <PendingCourses /> },
+
+      { path: '/admin/courses/modules', exact: true, element: <ModuleList /> },
 
       { path: '/lessions', exact: true, element: <LessionList /> },
 

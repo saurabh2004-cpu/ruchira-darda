@@ -2,12 +2,12 @@ import { Breadcrumbs, Typography, Box, Link, useMediaQuery } from "@mui/material
 import { ChevronRight } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 
-const BreadcrumbNavigation = ({ steps,setStep }) => {
+const BreadcrumbNavigation = ({ steps, setStep }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box sx={{ py: 2, px: 2, overflowX: isMobile ? "auto" : "visible" ,alignItems:"center", mx: "auto", justifyContent: "center",display: "flex"}}>
+    <Box sx={{ py: 2, px: 2, overflowX: isMobile ? "auto" : "visible", alignItems: "center", mx: "auto", justifyContent: "center", display: "flex" }}>
       <Breadcrumbs
         separator={<ChevronRight sx={{ color: "#666", fontSize: "1rem" }} />}
         aria-label="breadcrumb"
@@ -34,7 +34,7 @@ const BreadcrumbNavigation = ({ steps,setStep }) => {
                   color: "#4f46e5",
                 },
               }}
-              
+
             >
               {step.label}
             </Typography>

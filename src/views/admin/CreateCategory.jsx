@@ -29,7 +29,7 @@ export default function CreateCategory() {
         <Button
           variant="contained"
           startIcon={<ListIcon />}
-          sx={{ backgroundColor: "#1D322D" }}
+          sx={{ backgroundColor: "#343088" }}
           onClick={() => window.location.href = "/admin/category-list"}
         >
           Category List
@@ -118,7 +118,7 @@ export default function CreateCategory() {
               <Button
                 variant="contained"
                 sx={{
-                  backgroundColor: "#111d26",
+                  backgroundColor: "#343088",
                   color: "#fff",
                   borderRadius: "10px",
                   px: 4,

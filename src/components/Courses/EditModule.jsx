@@ -18,15 +18,15 @@ import { Close as CloseIcon } from "@mui/icons-material";
 import Alert from "@mui/material/Alert";
 import axiosInstance from "../../axios/axios";
 
-const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList }) => {
+const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList ,selectedModule}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    moduleName: "",
-    serial: "",
-    status: true,
+    moduleName: selectedModule.moduleName,
+    serial: selectedModule.serial,
+    status: selectedModule.status,
   });
 
   const [errors, setErrors] = useState({
@@ -58,7 +58,7 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
     if (!validate()) return;
     console.log("formData", formData);
     try {
-      const resp = await axiosInstance.post(`/api/module/create-module/${courseId}`, formData, {
+      const resp = await axiosInstance.put(`/api/module/update-module/${courseId}`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -231,4 +231,4 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
   );
 };
 
-export default CreateModule;
+export default EditModule;
