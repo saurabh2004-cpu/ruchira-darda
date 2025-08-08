@@ -56,7 +56,7 @@ const contactMessages = [
         serial: 3,
         name: "Robert Johnson",
         email: "robert.j@example.com",
-        createdAt:  "16 june 2023",
+        createdAt: "16 june 2023",
         message: "Complaint about service interruption last Tuesday.",
         date: "2023-05-17"
     },
@@ -182,7 +182,7 @@ const ContactMessage = () => {
     const endIndex = Math.min(startIndex + entriesPerPage, filteredData.length);
     const currentData = filteredData.slice(startIndex, endIndex);
 
-    
+
 
     const handleShowDetails = (id) => {
         console.log(`Showing details for ID: ${id}`);
@@ -349,7 +349,7 @@ const ContactMessage = () => {
                                         </Box>
                                     </Box>
                                 </TableCell>
-                                
+
                                 <TableCell sx={{ py: 3, fontWeight: 700, color: "text.secondary", fontSize: "0.875rem" }}>
                                     Actions
                                 </TableCell>
@@ -389,7 +389,7 @@ const ContactMessage = () => {
                                                 {item.createdAt}
                                             </Typography>
                                         </TableCell>
-                                        
+
                                         <TableCell sx={{ py: 3 }}>
                                             <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
                                                 <Button
@@ -408,8 +408,9 @@ const ContactMessage = () => {
                                                         fontWeight: 600,
                                                         minWidth: "auto",
                                                         "&:hover": {
-                                                            bgcolor: "#4b5563",
+                                                            bgcolor: "#584ca0",
                                                         },
+                                                        backgroundColor: "#343088"
                                                     }}
                                                 >
                                                     Details

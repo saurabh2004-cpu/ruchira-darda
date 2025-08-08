@@ -240,7 +240,7 @@ const EnrollmentList = () => {
     };
 
     return (
-        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative",  }}>
+        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative", }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
@@ -257,13 +257,11 @@ const EnrollmentList = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                        "&:hover": {
-                            bgcolor: "#34495e",
-                        },
+                        backgroundColor: "#343088"
                     }}
                     onClick={() => setShowCreateUserCard(true)}
                 >
-                    New Enrollment
+                    New Announcement
                 </Button>
             </Box>
 
@@ -477,8 +475,9 @@ const EnrollmentList = () => {
                                                         fontWeight: 600,
                                                         minWidth: "auto",
                                                         "&:hover": {
-                                                            bgcolor: "#4b5563",
+                                                            bgcolor: "#584ca0",
                                                         },
+                                                        backgroundColor: "#343088"
                                                     }}
                                                 >
                                                     Details

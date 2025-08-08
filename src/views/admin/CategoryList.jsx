@@ -1,408 +1,498 @@
 "use client"
 
-import * as React from "react"
+import { useState } from "react"
 import {
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
-  Typography,
-  TableHead,
-  Chip,
   Box,
+  Typography,
   Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Chip,
   TextField,
   Select,
   MenuItem,
   FormControl,
+  InputLabel,
+  InputAdornment,
+  Pagination,
+  Card,
+  CardContent,
+  IconButton,
   useMediaQuery,
   useTheme,
 } from "@mui/material"
-import { Grid } from "@mui/material"
-import { IconTrash, IconEdit, IconPlus, IconTrashFilled } from "@tabler/icons-react"
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
-import { IconTrashOff } from "@tabler/icons"
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  ArrowDropUp,
+  ArrowDropDown,
+  Search as SearchIcon,
+} from "@mui/icons-material"
+import { useNavigate } from "react-router"
 
-// Category data matching the screenshot
+// Category data matching the original
 const categoryData = [
-  { id: 1, title: "Server Management", status: "Active" },
-  { id: 2, title: "Online Educations", status: "Active" },
-  { id: 3, title: "Design System", status: "Active" },
-  { id: 4, title: "Blockchain Develop", status: "Active" },
-  { id: 5, title: "Photography & Video", status: "Active" },
-  { id: 6, title: "Math & Technology", status: "Active" },
-]
-
-const columnHelper = createColumnHelper()
-
-const columns = [
-  columnHelper.accessor("id", {
-    header: () => "Serial",
-    cell: (info) => (
-      <Typography
-        variant="body1"
-        sx={{
-          color: "#2d3748",
-          fontSize: { xs: "14px", sm: "16px" },
-          fontWeight: 400,
-        }}
-      >
-        {info.getValue()}
-      </Typography>
-    ),
-  }),
-  columnHelper.accessor("title", {
-    header: () => "Category",
-    cell: (info) => (
-      <Typography
-        variant="body1"
-        sx={{
-          color: "#2d3748",
-          fontSize: { xs: "14px", sm: "18px" },
-          fontWeight: 900,
-        }}
-      >
-        {info.getValue()}
-      </Typography>
-    ),
-  }),
-  columnHelper.accessor("status", {
-    header: () => "Status",
-    cell: (info) => (
-      <Chip
-        label={info.getValue()}
-        sx={{
-          backgroundColor: "#c6f6d5",
-          color: "#22543d",
-          fontWeight: 500,
-          fontSize: { xs: "12px", sm: "14px" },
-          height: { xs: "28px", sm: "32px" },
-          borderRadius: "6px",
-          px: { xs: 1, sm: 2 },
-          "& .MuiChip-label": {
-            px: 1,
-          },
-        }}
-      />
-    ),
-  }),
-  columnHelper.accessor("id", {
-    id: "actions",
-    header: () => "Action",
-    cell: (info) => (
-      <Box sx={{ display: "flex", gap: { xs: 1, sm: 1.5 }, flexWrap: "wrap" }}>
-        <Button
-          size="small"
-          startIcon={<IconEdit size="1rem" />}
-          sx={{
-            backgroundColor: "#2d3748",
-            color: "white",
-            textTransform: "none",
-            fontSize: { xs: "12px", sm: "17px" },
-            fontWeight: 500,
-            px: { xs: 1.5, sm: 2.5 },
-            borderRadius: "8px",
-            minWidth: "130px",
-            boxShadow: "none",
-            "&:hover": {
-              backgroundColor: "black",
-              boxShadow: "none",
-            },
-          }}
-
-          onClick={() => window.location.href = `/admin/edit-category?id=${info.getValue()}`}
-        >
-          Edit
-        </Button>
-        <Button
-          size="small"
-          sx={{
-            backgroundColor: "#fd5722",
-            color: "white",
-            minWidth: { xs: "32px", sm: "50px" },
-            width: { xs: "32px", sm: "50px" },
-            height: { xs: "32px", sm: "50px" },
-            borderRadius: "6px",
-            p: 0,
-            boxShadow: "none",
-            "&:hover": {
-              backgroundColor: "#e53e3e",
-              boxShadow: "none",
-            },
-          }}
-        >
-          <IconTrashFilled size="1.5rem" />
-        </Button>
-      </Box>
-    ),
-  }),
+  { id: 1, serial: 1, title: "Server Management", status: "Active" },
+  { id: 2, serial: 2, title: "Online Educations", status: "Active" },
+  { id: 3, serial: 3, title: "Design System", status: "Active" },
+  { id: 4, serial: 4, title: "Blockchain Develop", status: "Active" },
+  { id: 5, serial: 5, title: "Photography & Video", status: "Active" },
+  { id: 6, serial: 6, title: "Math & Technology", status: "Active" },
+  { id: 7, serial: 7, title: "Web Development", status: "Active" },
+  { id: 8, serial: 8, title: "Mobile Development", status: "Inactive" },
+  { id: 9, serial: 9, title: "Data Science", status: "Active" },
+  { id: 10, serial: 10, title: "Machine Learning", status: "Active" },
 ]
 
 const CategoryList = () => {
-  const [data, setData] = React.useState(() => [...categoryData])
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
-  const [search, setSearch] = React.useState("")
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"))
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const navigate = useNavigate()
 
-  // Filter data based on search
-  const filteredData = React.useMemo(() => {
-    if (!search) return data
-    return data.filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
-  }, [data, search])
+  const [entriesPerPage, setEntriesPerPage] = useState(10)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [searchBy, setSearchBy] = useState("all")
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const table = useReactTable({
-    data: filteredData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  })
-
-  const handleSearch = (event) => {
-    setSearch(event.target.value)
+  const handleEntriesChange = (event) => {
+    setEntriesPerPage(event.target.value)
+    setCurrentPage(1)
   }
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(Number.parseInt(event.target.value, 10))
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value)
+    setCurrentPage(1)
+  }
+
+  const handleSearchByChange = (event) => {
+    setSearchBy(event.target.value)
+    setCurrentPage(1)
+  }
+
+  const filteredData = categoryData.filter((item) => {
+    if (!searchTerm) return true
+    const searchLower = searchTerm.toLowerCase()
+
+    switch (searchBy) {
+      case "title":
+        return item.title.toLowerCase().includes(searchLower)
+      case "status":
+        return item.status.toLowerCase().includes(searchLower)
+      case "serial":
+        return item.serial.toString().includes(searchTerm)
+      default:
+        return (
+          item.title.toLowerCase().includes(searchLower) ||
+          item.status.toLowerCase().includes(searchLower) ||
+          item.serial.toString().includes(searchTerm)
+        )
+    }
+  })
+
+  const handleDelete = (id) => {
+    console.log(`Deleting category with ID: ${id}`)
+    alert(`Category with ID ${id} would be deleted in a real application`)
+  }
+
+  const handleEdit = (id) => {
+    console.log(`Editing category with ID: ${id}`)
+    navigate(`/admin/edit-category?id=${id}`)
+  }
+
+  const handleCreateNew = () => {
+    navigate("/admin/create-category")
+  }
+
+  const totalPages = Math.ceil(filteredData.length / entriesPerPage)
+  const startIndex = (currentPage - 1) * entriesPerPage
+  const endIndex = Math.min(startIndex + entriesPerPage, filteredData.length)
+  const currentData = filteredData.slice(startIndex, endIndex)
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value)
+  }
+
+  const getStatusChipColor = (status) => {
+    switch (status.toLowerCase()) {
+      case 'active':
+        return { bgcolor: "#d4edda", color: "#155724" }
+      case 'inactive':
+        return { bgcolor: "#fff3cd", color: "#856404" }
+      default:
+        return { bgcolor: "#e2e3e5", color: "#383d41" }
+    }
   }
 
   return (
-    <Box
-      sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative"  }}
-    >
-      {/* Header */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: "space-between",
-          alignItems: { xs: "flex-start", sm: "center" },
-          mb: { xs: 3, sm: 4 },
-          gap: { xs: 2, sm: 0 },
-        }}
-      >
+    <Box sx={{
+      py: 3,
+      px: isMobile ? 2 : 3,
+      mx: "auto",
+      bgcolor: "#f8fafc",
+      minHeight: "100vh"
+    }}>
+      {/* Header Section */}
+      <Box sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: { xs: "flex-start", sm: "center" },
+        flexDirection: { xs: "column", sm: "row" },
+        gap: { xs: 2, sm: 0 },
+        mb: 4
+      }}>
         <Typography
-          variant="h4"
+          variant={isMobile ? "h5" : "h4"}
           sx={{
-            fontWeight: 600,
-            color: "#1a1a1a",
-            fontSize: { xs: "24px", sm: "28px", md: "22px" },
-            fontFamily: "system-ui, -apple-system, sans-serif",
+            fontWeight: 700,
+            color: "text.primary",
+            fontSize: { xs: "1.5rem", sm: "2rem" }
           }}
         >
           Category List
         </Typography>
         <Button
           variant="contained"
-          startIcon={<IconPlus size="1.1rem" />}
+          startIcon={<AddIcon />}
+          fullWidth={isMobile}
+          onClick={handleCreateNew}
           sx={{
-            backgroundColor: "#2d3748",
+            bgcolor: "#2c3e50",
             color: "white",
-            borderRadius: "6px",
             textTransform: "none",
+            borderRadius: 2,
+            px: 3,
+            py: 1.5,
             fontWeight: 500,
-            fontSize: { xs: "12px", sm: "18px" },
-            px: { xs: 2, sm: 3, md: 4 },
-            py: { xs: 1, sm: 1.2 },
-            boxShadow: "none",
-            alignSelf: { xs: "flex-start", sm: "auto" },
             "&:hover": {
-              backgroundColor: "#1a202c",
-              boxShadow: "none",
-            },
+              bgcolor: "#34495e",
+            }, backgroundColor: "#343088"
           }}
-          onClick={() => window.location.href = "/admin/create-category"}
         >
           Create New
         </Button>
       </Box>
 
-      {/* Controls Row */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: "space-between",
-          alignItems: { xs: "flex-start", sm: "center" },
-          mb: 3,
-          gap: { xs: 2, sm: 0 },
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#4a5568",
-              fontSize: { xs: "14px", sm: "16px" },
-              fontWeight: 400,
-            }}
-          >
-            Show
-          </Typography>
-          <FormControl size="small" sx={{ minWidth: { xs: 60, sm: 70 } }}>
-            <Select
-              value={rowsPerPage}
-              onChange={handleChangeRowsPerPage}
-              sx={{
-                fontSize: { xs: "14px", sm: "16px" },
-                fontWeight: 500,
-                color: "#2d3748",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "4px",
-                },
-                "& .MuiSelect-select": {
-                  py: { xs: 0.5, sm: 0.8 },
-                  px: { xs: 1, sm: 1.5 },
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  border: "1px solid #cbd5e0",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  border: "1px solid #3182ce",
-                },
-              }}
-            >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={25}>25</MenuItem>
-            </Select>
-          </FormControl>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#4a5568",
-              fontSize: { xs: "14px", sm: "16px" },
-              fontWeight: 400,
-            }}
-          >
-            entries
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
+      {/* Controls Section */}
+      <Card sx={{ mb: 3, borderRadius: 2, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{
             display: "flex",
-            alignItems: "center",
-            gap: { xs: 1, sm: 2 },
-            width: { xs: "100%", sm: "auto" },
-          }}
-        >
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#4a5568",
-              fontSize: { xs: "14px", sm: "16px" },
-              fontWeight: 400,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Search:
-          </Typography>
-          <TextField
-            size="small"
-            value={search}
-            onChange={handleSearch}
-            sx={{
-              width: { xs: "100%", sm: 200, md: 250 },
-              "& .MuiOutlinedInput-root": {
-                fontSize: { xs: "12px", sm: "14px" },
-                "& fieldset": {
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "4px",
-                },
-                "&:hover fieldset": {
-                  border: "1px solid #cbd5e0",
-                },
-                "&.Mui-focused fieldset": {
-                  border: "1px solid #3182ce",
-                },
-                "& input": {
-                  py: { xs: 0.8, sm: 1 },
-                  px: { xs: 1, sm: 1.5 },
-                },
-              },
-            }}
-          />
-        </Box>
-      </Box>
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", lg: "center" },
+            flexDirection: { xs: "column", lg: "row" },
+            gap: 3
+          }}>
+            {/* Entries per page */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500 }}>
+                Show
+              </Typography>
+              <FormControl size="small" sx={{ minWidth: 80 }}>
+                <Select
+                  value={entriesPerPage}
+                  onChange={handleEntriesChange}
+                  sx={{
+                    bgcolor: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "grey.300",
+                    },
+                  }}
+                >
+                  <MenuItem value={5}>5</MenuItem>
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={25}>25</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                  <MenuItem value={100}>100</MenuItem>
+                </Select>
+              </FormControl>
+              <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500 }}>
+                entries
+              </Typography>
+            </Box>
+
+            {/* Search Section */}
+            <Box sx={{
+              display: "flex",
+              alignItems: { xs: "flex-start", sm: "center" },
+              flexDirection: { xs: "column", sm: "row" },
+              gap: 2,
+              width: { xs: "100%", sm: "auto" }
+            }}>
+              <FormControl size="small" sx={{ minWidth: 150 }}>
+                <InputLabel>Search by</InputLabel>
+                <Select
+                  value={searchBy}
+                  onChange={handleSearchByChange}
+                  label="Search by"
+                  sx={{
+                    bgcolor: "white",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "grey.300",
+                    },
+                  }}
+                >
+                  <MenuItem value="all">All Fields</MenuItem>
+                  <MenuItem value="title">Category</MenuItem>
+                  <MenuItem value="status">Status</MenuItem>
+                  <MenuItem value="serial">Serial</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                size="small"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder={`Search ${searchBy === 'all' ? 'all fields' : searchBy}...`}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ color: "grey.400" }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  width: { xs: "100%", sm: 280 },
+                  "& .MuiOutlinedInput-root": {
+                    bgcolor: "white",
+                    "& fieldset": {
+                      borderColor: "grey.300",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "primary.main",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "primary.main",
+                    },
+                  },
+                }}
+              />
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
 
       {/* Table */}
-      <Grid container spacing={0}>
-        <Grid size={12}>
-          <Box sx={{ overflowX: "auto" }}>
-            <TableContainer
-              sx={{
-                border: "none",
-                boxShadow: "none",
-                minWidth: { xs: "600px", md: "auto" },
-                "& .MuiTable-root": {
-                  borderCollapse: "separate",
-                  borderSpacing: 0,
-                },
-              }}
-            >
-              <Table>
-                <TableHead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <TableCell
-                          key={header.id}
+      <Paper variant="outlined" sx={{
+        borderRadius: 2,
+        overflow: "hidden",
+        mb: 3,
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
+      }}>
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow sx={{ bgcolor: "grey.50" }}>
+                <TableCell sx={{
+                  py: 3,
+                  fontWeight: 700,
+                  color: "text.secondary",
+                  fontSize: "0.875rem"
+                }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                    Serial
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
+                      <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
+                    </Box>
+                  </Box>
+                </TableCell>
+                <TableCell sx={{
+                  py: 3,
+                  fontWeight: 700,
+                  color: "text.secondary",
+                  fontSize: "0.875rem"
+                }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                    Category
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
+                      <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
+                    </Box>
+                  </Box>
+                </TableCell>
+                <TableCell sx={{
+                  py: 3,
+                  fontWeight: 700,
+                  color: "text.secondary",
+                  fontSize: "0.875rem"
+                }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                    Status
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
+                      <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
+                    </Box>
+                  </Box>
+                </TableCell>
+                <TableCell sx={{
+                  py: 3,
+                  fontWeight: 700,
+                  color: "text.secondary",
+                  fontSize: "0.875rem"
+                }}>
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {currentData.length > 0 ? (
+                currentData.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    sx={{
+                      "&:hover": {
+                        bgcolor: "grey.25",
+                      },
+                      "&:last-child td": {
+                        border: 0,
+                      },
+                    }}
+                  >
+                    <TableCell sx={{ py: 3 }}>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: "0.875rem",
+                          color: "text.primary"
+                        }}
+                      >
+                        {item.serial}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 3 }}>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: 600,
+                          color: "text.primary",
+                          fontSize: "0.875rem"
+                        }}
+                      >
+                        {item.title}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 3 }}>
+                      <Chip
+                        label={item.status}
+                        size="small"
+                        sx={{
+                          ...getStatusChipColor(item.status),
+                          fontWeight: 500,
+                          borderRadius: 2,
+                          fontSize: "0.75rem",
+                          height: 28,
+                          minWidth: 70,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell sx={{ py: 3 }}>
+                      <Box sx={{
+                        display: "flex",
+                        gap: 1,
+                        alignItems: "center",
+                        flexWrap: "wrap"
+                      }}>
+                        <Button
+                          variant="contained"
+                          size="small"
+                          startIcon={<EditIcon sx={{ fontSize: 16 }} />}
+                          onClick={() => handleEdit(item.id)}
                           sx={{
-                            fontWeight: 800,
-                            color: "#718096",
-                            fontSize: { xs: "14px", sm: "17px" },
-                            py: { xs: 2, sm: 2.5 },
-                            px: { xs: 1, sm: 2 },
-                            border: "none",
-                            backgroundColor: "transparent",
-                            whiteSpace: "nowrap",
+                            bgcolor: "#374151",
+                            color: "white",
+                            textTransform: "none",
+                            borderRadius: 1.5,
+                            px: 2,
+                            py: 0.8,
+                            fontSize: "0.75rem",
+                            fontWeight: 600,
+                            minWidth: "auto",
+                            "&:hover": {
+                              bgcolor: "#584ca0",
+                            },
+                             backgroundColor: "#343088"
                           }}
                         >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(header.column.columnDef.header, header.getContext())}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableHead>
-                <TableBody>
-                  {table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{
-                        "&:hover": {
-                          backgroundColor: "#f7fafc",
-                        },
-                      }}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
+                          Edit
+                        </Button>
+                        <IconButton
+                          onClick={() => handleDelete(item.id)}
                           sx={{
-                            py: { xs: 2, sm: 3 },
-                            px: { xs: 1, sm: 2 },
-                            border: "none",
-                            verticalAlign: "middle",
+                            backgroundColor: '#ef4444',
+                            color: 'white',
+                            width: 36,
+                            height: 36,
+                            '&:hover': {
+                              backgroundColor: '#dc2626'
+                            }
                           }}
                         >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        </Grid>
-      </Grid>
+                          <DeleteIcon sx={{ fontSize: 18 }} />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} sx={{ textAlign: "center", py: 6 }}>
+                    <Typography variant="body1" sx={{ color: "text.secondary", fontSize: "1rem" }}>
+                      No categories found matching your search criteria.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+
+      {/* Footer Section */}
+      {filteredData.length > 0 && (
+        <Card sx={{ borderRadius: 2, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+          <CardContent sx={{ p: 3 }}>
+            <Box sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: { xs: "flex-start", sm: "center" },
+              flexDirection: { xs: "column", sm: "row" },
+              gap: 2
+            }}>
+              <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500 }}>
+                Showing {startIndex + 1} to {endIndex} of {filteredData.length} entries
+              </Typography>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                variant="outlined"
+                shape="rounded"
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    fontWeight: 600,
+                  },
+                  "& .Mui-selected": {
+                    bgcolor: "#584ca0 !important",
+                    color: "white",
+                    "&:hover": {
+                      bgcolor: "#584ca0 !important",
+                    },
+                  },
+                }}
+              />
+            </Box>
+          </CardContent>
+        </Card>
+      )}
     </Box>
   )
 }
 
 export default CategoryList
-

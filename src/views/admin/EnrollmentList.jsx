@@ -140,9 +140,7 @@ const EnrollmentList = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                        "&:hover": {
-                            bgcolor: "#34495e",
-                        },
+                         backgroundColor: "#343088"
                     }}
                     onClick={() => setShowCreateNewCard(true)}
                 >
@@ -355,8 +353,9 @@ const EnrollmentList = () => {
                                                     fontWeight: 500,
                                                     minWidth: "auto",
                                                     "&:hover": {
-                                                        bgcolor: "#4b5563",
+                                                        bgcolor: "#584ca0",
                                                     },
+                                                    backgroundColor: "#343088"
                                                 }}
                                                 onClick={() => handleDetailClick(enrollment.id)}
                                             >

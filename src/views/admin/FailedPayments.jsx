@@ -355,8 +355,9 @@ const FailedPayments = () => {
                                                     fontWeight: 500,
                                                     minWidth: "auto",
                                                     "&:hover": {
-                                                        bgcolor: "#4b5563",
+                                                        bgcolor: "#584ca0",
                                                     },
+                                                    backgroundColor: "#343088"
                                                 }}
                                                 onClick={() => handleDetailClick(enrollment.id)}
                                             >

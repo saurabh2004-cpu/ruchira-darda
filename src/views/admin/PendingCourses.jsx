@@ -114,12 +114,12 @@ const PendingCourses = () => {
     )
 
     const handleEditClick = (courseId) => {
-        navigate(`/admin/courses/create/`,{ state: { courseId } });
+        navigate(`/admin/courses/create/`, { state: { courseId } });
     };
 
 
     return (
-        <Box ssx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative"  }}>
+        <Box ssx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative" }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
@@ -136,9 +136,7 @@ const PendingCourses = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                        "&:hover": {
-                            bgcolor: "#34495e",
-                        },
+                         backgroundColor: "#343088"
                     }}
                     onClick={() => window.location.href = '/admin/courses/create'}
                 >
@@ -347,8 +345,9 @@ const PendingCourses = () => {
                                                     fontWeight: 500,
                                                     minWidth: "auto",
                                                     "&:hover": {
-                                                        bgcolor: "#4b5563",
+                                                        bgcolor: "#584ca0",
                                                     },
+                                                    backgroundColor: "#343088"
                                                 }}
                                                 onClick={() => handleEditClick(course.id)}
                                             >

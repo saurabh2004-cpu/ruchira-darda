@@ -192,9 +192,7 @@ const StudentList = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                        "&:hover": {
-                            bgcolor: "#34495e",
-                        },
+                         backgroundColor: "#343088"
                     }}
                     onClick={() => setShowCreateUserCard(true)}
                 >
@@ -423,8 +421,9 @@ const StudentList = () => {
                                                         fontWeight: 600,
                                                         minWidth: "auto",
                                                         "&:hover": {
-                                                            bgcolor: "#4b5563",
-                                                        },
+                                                        bgcolor: "#584ca0",
+                                                    },
+                                                    backgroundColor: "#343088"
                                                     }}
                                                 >
                                                     Details

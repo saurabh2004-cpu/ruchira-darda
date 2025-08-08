@@ -227,7 +227,7 @@ const WithdrawList = () => {
     };
 
     return (
-        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" }}>
+        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative" }}>
             {/* Header Section */}
             <Box sx={{
                 display: "flex",
@@ -240,7 +240,7 @@ const WithdrawList = () => {
                 <Typography variant="h4" sx={{ fontWeight: 700, color: "text.primary" }}>
                     Withdraw List
                 </Typography>
-               
+
             </Box>
 
             {/* Controls Section */}
@@ -477,8 +477,9 @@ const WithdrawList = () => {
                                                         fontWeight: 600,
                                                         minWidth: "auto",
                                                         "&:hover": {
-                                                            bgcolor: "#4b5563",
+                                                            bgcolor: "#584ca0",
                                                         },
+                                                        backgroundColor: "#343088"
                                                     }}
                                                 >
                                                     Details

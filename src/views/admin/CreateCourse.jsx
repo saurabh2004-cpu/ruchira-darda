@@ -249,6 +249,7 @@ const CreateCourse = () => {
                   setStep("Image And Video");
                   console.log("formData", formData);
                 }}
+                  sx={{ backgroundColor: "#343088" }}
               >
                 Save And Next
               </Button>

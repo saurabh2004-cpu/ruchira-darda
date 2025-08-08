@@ -97,11 +97,11 @@ const CouponList = () => {
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const [showCreateNewCard, setShowCreateNewCard] = useState(false)
-    const [showEditCouponModal,setShowEditCouponModal] = useState(false)
+    const [showEditCouponModal, setShowEditCouponModal] = useState(false)
     const [selectedCoupon, setSelectedCoupon] = useState(null)
 
-    
-  
+
+
     const navigate = useNavigate()
 
     const handleEntriesChange = (event) => {
@@ -141,7 +141,7 @@ const CouponList = () => {
     }
 
     return (
-        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative"  }}>
+        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative" }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
@@ -158,9 +158,8 @@ const CouponList = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                        "&:hover": {
-                            bgcolor: "#34495e",
-                        },
+                        
+                        backgroundColor: "#343088"
                     }}
                     onClick={() => navigate('/admin/create-coupon')}
                 >
@@ -253,7 +252,7 @@ const CouponList = () => {
                                 </TableCell>
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                       End Time
+                                        End Time
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                                             <ArrowDropUp sx={{ fontSize: 16, color: "grey.400", mb: -0.5 }} />
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
@@ -269,7 +268,7 @@ const CouponList = () => {
                                         </Box>
                                     </Box>
                                 </TableCell>
-                                
+
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                         Action
@@ -344,9 +343,11 @@ const CouponList = () => {
                                                     fontSize: "0.85rem",
                                                     fontWeight: 500,
                                                     minWidth: "auto",
+                                                    minWidth: "auto",
                                                     "&:hover": {
-                                                        bgcolor: "#4b5563",
+                                                        bgcolor: "#584ca0",
                                                     },
+                                                    backgroundColor: "#343088"
                                                 }}
                                                 onClick={() => navigate(`/admin/coupon-details?id=${coupon.id}`)}
                                             >

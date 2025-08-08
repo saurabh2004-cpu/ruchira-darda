@@ -25,7 +25,7 @@ const ImageAndVideo = ({ formData, setFormData, setStep, setCourseId }) => {
   const [thumbnailImage, setThumbnailImage] = useState('https://educve-laravel.themedox.com/uploads/custom-images/course-thumb-2025-02-13-02-28-40-9348.webp');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  
+
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 700);
@@ -104,7 +104,7 @@ const ImageAndVideo = ({ formData, setFormData, setStep, setCourseId }) => {
     }
   }
 
-  
+
 
 
   return (
@@ -165,20 +165,20 @@ const ImageAndVideo = ({ formData, setFormData, setStep, setCourseId }) => {
 
           {/* Buttons */}
           <Box mt={4} display="flex" gap={2}>
-            <Button variant="contained" color="primary" sx={{ px: 4, fontSize: "18px", fontWeight: "500" }}
+            <Button variant="contained" color="primary" sx={{ px: 4, fontSize: "18px", fontWeight: "500", backgroundColor: "#343088" }}
               onClick={() => setStep('Basic Information')}>
               Previous Step
             </Button>
             <Button variant="contained" color="primary" sx={{
-              px: 4, fontSize: "18px", fontWeight: "500"
+              px: 4, fontSize: "18px", fontWeight: "500",backgroundColor: "#343088"
             }}
               onClick={handleCreateCourse}>
-              {isLoading ? <IconLoader3 size={20} style={{ animation: 'spin 1s linear infinite' }} /> : "Save And Continue"}
+              {isLoading ? <IconLoader3 size={20} style={{ animation: 'spin 1s linear infinite',  }}  /> : "Save And Continue"}
               {/* Save And Next */}
             </Button>
-            <Button variant="outlined" color="secondary" startIcon={<PlayCircleOutlineIcon />}>
+            {/* <Button variant="outlined" backgroundColor="#7c74b4" sx={{ px: 4, fontSize: "18px", fontWeight: "500" }} startIcon={<PlayCircleOutlineIcon />}>
               Preview Video
-            </Button>
+            </Button> */}
           </Box>
         </Box>
         {error && <Alert severity="error" icon={false}>

@@ -114,12 +114,12 @@ const CategoryList = () => {
     )
 
     const handleEditClick = (courseId) => {
-        navigate(`/admin/courses/create/`,{ state: { courseId } });
+        navigate(`/admin/courses/create/`, { state: { courseId } });
     };
 
 
     return (
-        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" , }}>
+        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative", }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
@@ -138,7 +138,8 @@ const CategoryList = () => {
                         fontWeight: 500,
                         "&:hover": {
                             bgcolor: "#34495e",
-                        },
+                        }, backgroundColor: "#343088"
+
                     }}
                     onClick={() => window.location.href = '/admin/courses/create'}
                 >
@@ -281,7 +282,7 @@ const CategoryList = () => {
                                     }}
                                 >
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 600,fontSize: "0.875rem", color: "text.primary" }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 600, fontSize: "0.875rem", color: "text.primary" }}>
                                             {course.serial}
                                         </Typography>
                                     </TableCell>
@@ -306,7 +307,7 @@ const CategoryList = () => {
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
-                                        <Typography variant="body1" sx={{ color: "text.primary",fontWeight: 600, fontSize: "0.875rem" }}>
+                                        <Typography variant="body1" sx={{ color: "text.primary", fontWeight: 600, fontSize: "0.875rem" }}>
                                             {course.category}
                                         </Typography>
                                     </TableCell>
@@ -348,8 +349,9 @@ const CategoryList = () => {
                                                     fontWeight: 500,
                                                     minWidth: "auto",
                                                     "&:hover": {
-                                                        bgcolor: "#4b5563",
+                                                        bgcolor: "#584ca0",
                                                     },
+                                                    backgroundColor: "#343088"
                                                 }}
                                                 onClick={() => handleEditClick(course.id)}
                                             >
