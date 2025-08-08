@@ -169,9 +169,7 @@ const CategoryList = () => {
             px: 3,
             py: 1.5,
             fontWeight: 500,
-            "&:hover": {
-              bgcolor: "#34495e",
-            }, backgroundColor: "#343088"
+             backgroundColor: "#343088"
           }}
         >
           Create New

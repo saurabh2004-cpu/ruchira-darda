@@ -396,7 +396,7 @@ const ContactMessage = () => {
                                                     variant="contained"
                                                     size="small"
                                                     startIcon={<VisibilityIcon sx={{ fontSize: 16 }} />}
-                                                    onClick={() => handleShowDetails(item.id)}
+                                                    // onClick={() => handleShowDetails(item.id)}
                                                     sx={{
                                                         bgcolor: "#374151",
                                                         color: "white",

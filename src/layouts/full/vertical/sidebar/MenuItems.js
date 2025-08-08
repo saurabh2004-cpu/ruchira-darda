@@ -79,7 +79,7 @@ const Menuitems = [
     id: uniqueId(),
     title: 'Earning & Revenue',
     icon: IconShoppingCart,
-    href: '/admin/earning-revenue',
+    // href: '/admin/earning-revenue',
   },
   {
     id: uniqueId(),

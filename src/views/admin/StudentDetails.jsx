@@ -173,7 +173,7 @@ const StudentDetails = () => {
   );
 
   return (
-    <Box sx={{ py: 3, minWidth: 1350, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative", right: 100 }}>
+    <Box sx={{ py: 3,  mx: "auto", bgcolor: "#f8fafc",  }}>
       <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
         {/* Stats Cards */}
         <Grid container spacing={3} sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
@@ -309,7 +309,7 @@ const StudentDetails = () => {
           </Grid>
 
           {/* Enrollments Table */}
-          <Grid item xs={12} md={8} sx={{ py: 3, minWidth: 950, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative", }}>
+          <Grid item xs={12} md={8} sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc",  }}>
             <Paper
               elevation={0}
               sx={{
@@ -443,9 +443,7 @@ const StudentDetails = () => {
                               minWidth: 'auto',
                               px: 2,
                               py: 1,
-                              '&:hover': {
-                                bgcolor: '#111827',
-                              },
+                              backgroundColor: "#343088"
                             }}
                             onClick={() => handleDetailClick(enrollment)}
                           >

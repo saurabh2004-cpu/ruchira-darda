@@ -257,9 +257,7 @@ const CreateNewEnrollment = ({ open, onClose, onSave}) => {
             fontWeight: 600,
             fontSize: "1rem",
             bgcolor: "#6366f1",
-            "&:hover": {
-              bgcolor: "#5048e5",
-            },
+           backgroundColor: "#343088"
           }}
         >
           Save

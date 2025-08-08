@@ -195,9 +195,7 @@ const CreateCoupon = () => {
             px: 3,
             py: 1.5,
             fontWeight: 500,
-            "&:hover": {
-              bgcolor: "#34495e",
-            },
+           backgroundColor: "#343088"
           }}
         >
           Coupon List
@@ -585,9 +583,7 @@ const CreateCoupon = () => {
                 fontWeight: 600,
                 fontSize: "1rem",
                 minWidth: isMobile ? "100%" : 150,
-                "&:hover": {
-                  bgcolor: "#34495e",
-                },
+                backgroundColor: "#343088"
               }}
             >
               Save Coupon
