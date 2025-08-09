@@ -257,7 +257,7 @@ const ImageAndVideo = ({ formData, setFormData, setStep, setCourseId, courseID }
 
             <Grid item xs={12} md={6}>
               <CustomFormLabel htmlFor="video-link">Video Link</CustomFormLabel>
-              <CustomTextField id="video-link" fullWidth sx={{ width: "200%" }}
+              <CustomTextField id="video-link" fullWidth sx={{ width: "100%" }}
                 onChange={(e) => setFormData({ ...formData, videoLink: e.target.value })} value={formData.videoLink} />
             </Grid>
           </Grid>
@@ -271,7 +271,7 @@ const ImageAndVideo = ({ formData, setFormData, setStep, setCourseId, courseID }
 
             {/* //create course and edit course buttons */}
             {courseID === null && <Button variant="contained" color="primary" sx={{
-              px: 4, fontSize: "18px", fontWeight: "500", backgroundColor: "#343088"
+              px: 2, fontSize: "18px", fontWeight: "500", backgroundColor: "#343088"
             }}
               onClick={handleCreateCourse}>
               {isLoading ? <IconLoader3 size={20} style={{ animation: 'spin 1s linear infinite', }} /> : "Save And Continue"}
@@ -279,7 +279,7 @@ const ImageAndVideo = ({ formData, setFormData, setStep, setCourseId, courseID }
             </Button>}
 
             {courseID !== null && <Button variant="contained" color="primary" sx={{
-              px: 4, fontSize: "18px", fontWeight: "500", backgroundColor: "#343088"
+              px: 2, fontSize: "18px", fontWeight: "500", backgroundColor: "#343088"
             }}
               onClick={handleUpdateCourse}>
               {isLoading ? <IconLoader3 size={20} style={{ animation: 'spin 1s linear infinite', }} /> : "Update And Continue"}

@@ -90,7 +90,7 @@ const EnrollmentList = () => {
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const [showCreateNewCard, setShowCreateNewCard] = useState(false)
-  
+
     const navigate = useNavigate()
 
 
@@ -117,13 +117,13 @@ const EnrollmentList = () => {
         navigate(`/admin/enrollment-details?id=${enrollmentId}`);
     };
 
-     const handleCreateNewEnrollment = (newEnrollment) => {
+    const handleCreateNewEnrollment = (newEnrollment) => {
         // setEnrollmentData((prev) => [...prev, { ...newEnrollment, id: prev.length + 1 }])
     }
-   
+
 
     return (
-        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh",position: "relative" ,}}>
+        <Box sx={{ py: 3, mx: "auto", bgcolor: "#f8fafc", minHeight: "100vh", position: "relative", }}>
             {/* Header Section */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
@@ -140,7 +140,7 @@ const EnrollmentList = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                         backgroundColor: "#343088"
+                        backgroundColor: "#343088"
                     }}
                     onClick={() => setShowCreateNewCard(true)}
                 >
@@ -148,18 +148,35 @@ const EnrollmentList = () => {
                 </Button>
             </Box>
 
-            {/* Controls Section */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+            {/* Responsive Controls Section */}
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: { xs: "flex-start", sm: "center" },
+                    flexDirection: { xs: "column", sm: "row" },
+                    gap: { xs: 2, sm: 0 },
+                    mb: 3
+                }}
+            >
+                {/* Show entries control */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         Show
                     </Typography>
-                    <FormControl size="small" sx={{ minWidth: 80 }}>
+                    <FormControl size="small" sx={{ minWidth: { xs: 60, sm: 80 } }}>
                         <Select
                             value={entriesPerPage}
                             onChange={handleEntriesChange}
                             sx={{
                                 bgcolor: "white",
+                                fontSize: { xs: "0.75rem", sm: "0.875rem" },
                                 "& .MuiOutlinedInput-notchedOutline": {
                                     borderColor: "grey.300",
                                 },
@@ -171,13 +188,26 @@ const EnrollmentList = () => {
                             <MenuItem value={100}>100</MenuItem>
                         </Select>
                     </FormControl>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         entries
                     </Typography>
                 </Box>
 
+                {/* Search control */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         Search:
                     </Typography>
                     <TextField
@@ -186,9 +216,10 @@ const EnrollmentList = () => {
                         onChange={handleSearchChange}
                         placeholder=""
                         sx={{
-                            width: 100,
+                            width: '100%',
                             "& .MuiOutlinedInput-root": {
                                 bgcolor: "white",
+                                fontSize: { xs: "0.75rem", sm: "0.875rem" },
                                 "& fieldset": {
                                     borderColor: "grey.300",
                                 },

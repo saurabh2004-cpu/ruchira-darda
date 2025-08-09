@@ -171,12 +171,27 @@ const PendingCourses = () => {
             </Box>
 
             {/* Controls Section */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: { xs: "stretch", sm: "center" },
+                    flexDirection: { xs: "column", sm: "row" },
+                    gap: { xs: 2, sm: 0 },
+                    mb: 3
+                }}
+            >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         Show
                     </Typography>
-                    <FormControl size="small" sx={{ minWidth: 80 }}>
+                    <FormControl size="small" sx={{ minWidth: { xs: 70, sm: 80 } }}>
                         <Select
                             value={entriesPerPage}
                             onChange={handleEntriesChange}
@@ -193,13 +208,25 @@ const PendingCourses = () => {
                             <MenuItem value={100}>100</MenuItem>
                         </Select>
                     </FormControl>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         entries
                     </Typography>
                 </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         Search:
                     </Typography>
                     <TextField
@@ -208,7 +235,8 @@ const PendingCourses = () => {
                         onChange={handleSearchChange}
                         placeholder=""
                         sx={{
-                            width: 200,
+                            width: { xs: "100%", sm: 200, md: 250 },
+                            minWidth: { xs: 150, sm: 200 },
                             "& .MuiOutlinedInput-root": {
                                 bgcolor: "white",
                                 "& fieldset": {

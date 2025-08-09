@@ -26,7 +26,7 @@ const CourseList = () => {
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const navigate = useNavigate()
-    
+
     const value = localStorage.getItem('user');
     const user = JSON.parse(value);
     const [courseData, setCourseData] = useState([]);
@@ -50,7 +50,7 @@ const CourseList = () => {
     )
 
     const handleEditClick = (courseId) => {
-        navigate(`/admin/courses/create/?courseId=${courseId}` );
+        navigate(`/admin/courses/create/?courseId=${courseId}`);
     };
 
     const fetchCourses = async () => {
@@ -72,7 +72,7 @@ const CourseList = () => {
         } catch (error) {
             console.error("Error deleting course:", error);
         }
-    };  
+    };
 
     useEffect(() => {
         fetchCourses()
@@ -108,20 +108,53 @@ const CourseList = () => {
             </Box>
 
             {/* Controls Section */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            <Box sx={{
+                display: "flex",
+                justifyContent: { xs: "flex-start", sm: "space-between" },
+                alignItems: { xs: "flex-start", sm: "center" },
+                mb: { xs: 2, sm: 3 },
+                flexDirection: { xs: "column", sm: "row" },
+                gap: { xs: 2, sm: 0 },
+                width: "100%"
+            }}>
+                {/* Show entries section */}
+                <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    flexWrap: { xs: "wrap", sm: "nowrap" }
+                }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                            whiteSpace: "nowrap"
+                        }}
+                    >
                         Show
                     </Typography>
-                    <FormControl size="small" sx={{ minWidth: 80 }}>
+                    <FormControl
+                        size="small"
+                        sx={{
+                            minWidth: { xs: 70, sm: 80 },
+                            "& .MuiSelect-select": {
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" }
+                            }
+                        }}
+                    >
                         <Select
                             value={entriesPerPage}
                             onChange={handleEntriesChange}
                             sx={{
                                 bgcolor: "white",
+                                height: { xs: 35, sm: 40 },
                                 "& .MuiOutlinedInput-notchedOutline": {
                                     borderColor: "grey.300",
                                 },
+                                "& .MuiSelect-select": {
+                                    py: { xs: 0.5, sm: 1 }
+                                }
                             }}
                         >
                             <MenuItem value={10}>10</MenuItem>
@@ -130,28 +163,67 @@ const CourseList = () => {
                             <MenuItem value={100}>100</MenuItem>
                         </Select>
                     </FormControl>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                            whiteSpace: "nowrap",
+                            display: { xs: "none", sm: "block" }
+                        }}
+                    >
                         entries
                     </Typography>
                 </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {/* Search section */}
+                <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    width: { xs: "100%", sm: "auto" },
+                    flexWrap: { xs: "wrap", sm: "nowrap" }
+                }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                            whiteSpace: "nowrap"
+                        }}
+                    >
                         Search:
                     </Typography>
                     <TextField
                         size="small"
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        placeholder=""
+                        placeholder="Search..."
                         sx={{
-                            width: 200,
+                            width: { xs: "100%", sm: 200, md: 250 },
+                            minWidth: { xs: 150, sm: 200 },
                             "& .MuiOutlinedInput-root": {
                                 bgcolor: "white",
+                                height: { xs: 35, sm: 40 },
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" },
                                 "& fieldset": {
                                     borderColor: "grey.300",
                                 },
+                                "&:hover fieldset": {
+                                    borderColor: "grey.400",
+                                },
+                                "&.Mui-focused fieldset": {
+                                    borderColor: "primary.main",
+                                },
                             },
+                            "& .MuiInputBase-input": {
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                                py: { xs: 0.5, sm: 1 }
+                            },
+                            "& .MuiInputBase-input::placeholder": {
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                                opacity: 0.7
+                            }
                         }}
                     />
                 </Box>
@@ -172,7 +244,7 @@ const CourseList = () => {
                                         </Box>
                                     </Box>
                                 </TableCell>
-                               
+
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                         Title
@@ -239,7 +311,7 @@ const CourseList = () => {
                                             {course.serial}
                                         </Typography>
                                     </TableCell>
-                                    
+
                                     <TableCell sx={{ py: 2.5, maxWidth: 300, }}>
                                         <Typography
                                             variant="body1"

@@ -158,7 +158,7 @@ const CouponList = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                        
+
                         backgroundColor: "#343088"
                     }}
                     onClick={() => navigate('/admin/create-coupon')}
@@ -167,18 +167,35 @@ const CouponList = () => {
                 </Button>
             </Box>
 
-            {/* Controls Section */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+            {/* Responsive Controls Section */}
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: { xs: "flex-start", sm: "center" },
+                    flexDirection: { xs: "column", sm: "row" },
+                    gap: { xs: 2, sm: 0 },
+                    mb: 3
+                }}
+            >
+                {/* Show entries control */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         Show
                     </Typography>
-                    <FormControl size="small" sx={{ minWidth: 80 }}>
+                    <FormControl size="small" sx={{ minWidth: { xs: 60, sm: 80 } }}>
                         <Select
                             value={entriesPerPage}
                             onChange={handleEntriesChange}
                             sx={{
                                 bgcolor: "white",
+                                fontSize: { xs: "0.75rem", sm: "0.875rem" },
                                 "& .MuiOutlinedInput-notchedOutline": {
                                     borderColor: "grey.300",
                                 },
@@ -190,13 +207,26 @@ const CouponList = () => {
                             <MenuItem value={100}>100</MenuItem>
                         </Select>
                     </FormControl>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         entries
                     </Typography>
                 </Box>
 
+                {/* Search control */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                            fontSize: { xs: "0.75rem", sm: "0.875rem" }
+                        }}
+                    >
                         Search:
                     </Typography>
                     <TextField
@@ -205,9 +235,10 @@ const CouponList = () => {
                         onChange={handleSearchChange}
                         placeholder=""
                         sx={{
-                            width: 200,
+                            width: { xs: 140, sm: 160, md: 200 },
                             "& .MuiOutlinedInput-root": {
                                 bgcolor: "white",
+                                fontSize: { xs: "0.75rem", sm: "0.875rem" },
                                 "& fieldset": {
                                     borderColor: "grey.300",
                                 },
@@ -342,7 +373,6 @@ const CouponList = () => {
                                                     py: 1,
                                                     fontSize: "0.85rem",
                                                     fontWeight: 500,
-                                                    minWidth: "auto",
                                                     minWidth: "auto",
                                                     "&:hover": {
                                                         bgcolor: "#584ca0",

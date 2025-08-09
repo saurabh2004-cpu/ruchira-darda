@@ -60,7 +60,7 @@ export default function CreateCategory() {
 
   return (
     <Box
-      p={4}
+      p={{ xs: 2, sm: 3, md: 4 }}
       sx={{
         backgroundColor: "#fff",
         borderRadius: 4,
@@ -68,6 +68,8 @@ export default function CreateCategory() {
         flexDirection: "column",
         gap: 3,
         maxWidth: "1000px",
+        width: "100%",
+        mx: "auto"
       }}
     >
       {/* Header */}
@@ -75,7 +77,12 @@ export default function CreateCategory() {
         <Button
           variant="contained"
           startIcon={<ListIcon />}
-          sx={{ backgroundColor: "#343088" }}
+          sx={{ 
+            backgroundColor: "#343088",
+            fontSize: { xs: '0.8rem', sm: '0.875rem' },
+            px: { xs: 2, sm: 3 },
+            py: { xs: 1, sm: 1.5 }
+          }}
           onClick={() => window.location.href = "/admin/category-list"}
         >
           Category List
@@ -83,7 +90,11 @@ export default function CreateCategory() {
       </Box>
 
       {/* Title */}
-      <Typography variant="h6" fontWeight={600}>
+      <Typography 
+        variant="h6" 
+        fontWeight={600}
+        sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+      >
         Create Category
       </Typography>
 
@@ -125,9 +136,15 @@ export default function CreateCategory() {
         </Grid> */}
 
         {/* Inputs and Switch */}
-        <Grid item xs={12} md={8} sx={{ width: 500 }}>
+        <Grid item xs={12} sx={{ width: "100%", maxWidth: { xs: "100%", sm: 500, md: 600 } }}>
           <Grid container spacing={3} sx={{ flexDirection: "column", gap: 3 }}>
-            <label htmlFor="category-name" style={{ fontWeight: 600 }}>
+            <label 
+              htmlFor="category-name" 
+              style={{ 
+                fontWeight: 600,
+                fontSize: window.innerWidth < 600 ? '0.9rem' : '1rem'
+              }}
+            >
               category Name
             </label>
             <Grid item xs={12}>
@@ -137,9 +154,16 @@ export default function CreateCategory() {
                 value={formData.categoryName}
                 xs={{ border: 'none' }}
                 onChange={(e) => handleSlugChange(e.target.value)}
+                size={window.innerWidth < 600 ? "small" : "medium"}
               />
             </Grid>
-            <label htmlFor="category-name" style={{ fontWeight: 600 }}>
+            <label 
+              htmlFor="category-slug" 
+              style={{ 
+                fontWeight: 600,
+                fontSize: window.innerWidth < 600 ? '0.9rem' : '1rem'
+              }}
+            >
               slug
             </label>
             <Grid item xs={12}>
@@ -148,12 +172,19 @@ export default function CreateCategory() {
                 fullWidth
                 disabled
                 value={slug}
+                size={window.innerWidth < 600 ? "small" : "medium"}
               />
             </Grid>
 
             {/* Visibility Switch */}
             <Grid item xs={12}>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  mb: 1,
+                  fontSize: { xs: '0.9rem', sm: '1rem' }
+                }}
+              >
                 Visibility Status
               </Typography>
               <Switch
@@ -166,6 +197,7 @@ export default function CreateCategory() {
                   }));
                 }}
                 color="primary"
+                size={window.innerWidth < 600 ? "small" : "medium"}
               />
             </Grid>
 
@@ -173,12 +205,14 @@ export default function CreateCategory() {
             <Grid item xs={12}>
               <Button
                 variant="contained"
+                fullWidth={window.innerWidth < 600}
                 sx={{
                   backgroundColor: "#343088",
                   color: "#fff",
                   borderRadius: "10px",
-                  px: 4,
-                  py: 1.5,
+                  px: { xs: 3, sm: 4 },
+                  py: { xs: 1.2, sm: 1.5 },
+                  fontSize: { xs: '0.85rem', sm: '1rem' },
                   textTransform: "none",
                   "&:hover": {
                     backgroundColor: "#0d1620",

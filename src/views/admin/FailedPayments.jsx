@@ -150,55 +150,86 @@ const FailedPayments = () => {
                 </Button> */}
             </Box>
 
-            {/* Controls Section */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                        Show
-                    </Typography>
-                    <FormControl size="small" sx={{ minWidth: 80 }}>
-                        <Select
-                            value={entriesPerPage}
-                            onChange={handleEntriesChange}
-                            sx={{
-                                bgcolor: "white",
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "grey.300",
-                                },
-                            }}
-                        >
-                            <MenuItem value={10}>10</MenuItem>
-                            <MenuItem value={25}>25</MenuItem>
-                            <MenuItem value={50}>50</MenuItem>
-                            <MenuItem value={100}>100</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                        entries
-                    </Typography>
-                </Box>
+            {/* Responsive Controls Section */}
+<Box 
+    sx={{ 
+        display: "flex", 
+        justifyContent: "space-between", 
+        alignItems: { xs: "flex-start", sm: "center" },
+        flexDirection: { xs: "column", sm: "row" },
+        gap: { xs: 2, sm: 0 },
+        mb: 3 
+    }}
+>
+    {/* Show entries control */}
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Typography 
+            variant="body2" 
+            sx={{ 
+                color: "text.secondary",
+                fontSize: { xs: "0.75rem", sm: "0.875rem" }
+            }}
+        >
+            Show
+        </Typography>
+        <FormControl size="small" sx={{ minWidth: { xs: 60, sm: 80 } }}>
+            <Select
+                value={entriesPerPage}
+                onChange={handleEntriesChange}
+                sx={{
+                    bgcolor: "white",
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "grey.300",
+                    },
+                }}
+            >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={25}>25</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+                <MenuItem value={100}>100</MenuItem>
+            </Select>
+        </FormControl>
+        <Typography 
+            variant="body2" 
+            sx={{ 
+                color: "text.secondary",
+                fontSize: { xs: "0.75rem", sm: "0.875rem" }
+            }}
+        >
+            entries
+        </Typography>
+    </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                        Search:
-                    </Typography>
-                    <TextField
-                        size="small"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder=""
-                        sx={{
-                            width: 200,
-                            "& .MuiOutlinedInput-root": {
-                                bgcolor: "white",
-                                "& fieldset": {
-                                    borderColor: "grey.300",
-                                },
-                            },
-                        }}
-                    />
-                </Box>
-            </Box>
+    {/* Search control */}
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Typography 
+            variant="body2" 
+            sx={{ 
+                color: "text.secondary",
+                fontSize: { xs: "0.75rem", sm: "0.875rem" }
+            }}
+        >
+            Search:
+        </Typography>
+        <TextField
+            size="small"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder=""
+            sx={{
+                width: { xs: 140, sm: 160, md: 200 },
+                "& .MuiOutlinedInput-root": {
+                    bgcolor: "white",
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    "& fieldset": {
+                        borderColor: "grey.300",
+                    },
+                },
+            }}
+        />
+    </Box>
+</Box>
 
             {/* Table */}
             <Paper variant="outlined" sx={{ borderRadius: 2, overflow: "hidden", mb: 3 }}>
