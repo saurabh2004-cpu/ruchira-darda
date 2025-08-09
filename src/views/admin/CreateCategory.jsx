@@ -19,7 +19,7 @@ export default function CreateCategory() {
   })
 
   const handleSlugChange = (categoryName) => {
-    const slug = categoryName
+    const slug = categoryName.trim()
       .toLowerCase()
       .replace(/ /g, "-")
       .replace(/[^\w-]+/g, "");

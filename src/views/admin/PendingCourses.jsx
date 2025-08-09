@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     Box,
     Typography,
@@ -20,6 +20,7 @@ import {
 } from "@mui/material"
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
 import { useNavigate } from "react-router"
+import axiosInstance from "../../axios/axios"
 
 // Sample course data matching the image
 const courseData = [
@@ -93,6 +94,7 @@ const PendingCourses = () => {
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const navigate = useNavigate()
+    const [pendingCourses, setPendingCourses] = useState([])
 
     const handleEntriesChange = (event) => {
         setEntriesPerPage(event.target.value)
@@ -106,7 +108,21 @@ const PendingCourses = () => {
         setCurrentPage(value)
     }
 
-    const filteredData = courseData.filter(
+    const fetchPendingCourses = async () => {
+        try {
+            const response = await axiosInstance("/api/course/pending-courses")
+            console.log("Pending Courses fetched:", response.data);
+            setPendingCourses(response.data.pendingCourses || []);
+        } catch (error) {
+            console.error("Error fetching pending courses:", error)
+        }
+    }
+
+    useEffect(() => {
+        fetchPendingCourses()
+    }, [])
+
+    const filteredData = pendingCourses.filter(
         (course) =>
             course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             course.instructor.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,7 +130,17 @@ const PendingCourses = () => {
     )
 
     const handleEditClick = (courseId) => {
-        navigate(`/admin/courses/create/`, { state: { courseId } });
+        navigate(`/admin/courses/create/?courseId=${courseId}`,);
+    };
+
+    const handleDeleteClick = async (courseId) => {
+        try {
+            const res = await axiosInstance.delete(`/api/course/delete-course/${courseId}`);
+            console.log("response", res);
+            setPendingCourses(courseData.filter((course) => course._id !== courseId));
+        } catch (error) {
+            console.error("Error deleting course:", error);
+        }
     };
 
 
@@ -136,7 +162,7 @@ const PendingCourses = () => {
                         px: 3,
                         py: 1,
                         fontWeight: 500,
-                         backgroundColor: "#343088"
+                        backgroundColor: "#343088"
                     }}
                     onClick={() => window.location.href = '/admin/courses/create'}
                 >
@@ -209,7 +235,7 @@ const PendingCourses = () => {
                                         </Box>
                                     </Box>
                                 </TableCell>
-                                <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
+                                {/* <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                         Instructor
                                         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -217,7 +243,7 @@ const PendingCourses = () => {
                                             <ArrowDropDown sx={{ fontSize: 16, color: "grey.400", mt: -0.5 }} />
                                         </Box>
                                     </Box>
-                                </TableCell>
+                                </TableCell> */}
                                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "0.875rem" }}>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                                         Title
@@ -266,9 +292,9 @@ const PendingCourses = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {courseData.map((course) => (
+                            {pendingCourses.map((course, index) => (
                                 <TableRow
-                                    key={course.id}
+                                    key={course._id}
                                     sx={{
                                         "&:hover": {
                                             bgcolor: "grey.25",
@@ -280,14 +306,14 @@ const PendingCourses = () => {
                                 >
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                                            {course.serial}
+                                            {index + 1}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell sx={{ py: 2.5 }}>
+                                    {/* <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 500, color: "text.primary" }}>
                                             {course.instructor}
                                         </Typography>
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell sx={{ py: 2.5, maxWidth: 300 }}>
                                         <Typography
                                             variant="body1"
@@ -309,16 +335,22 @@ const PendingCourses = () => {
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 500, color: "text.primary" }}>
-                                            ${course.price.toFixed(2)}
+                                            ${course.regularPrice?.toFixed(2)}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Chip
-                                            label={course.visibility}
+                                            label={course.visibility ? "Public" : "Private"}
                                             size="small"
                                             sx={{
-                                                bgcolor: "#d4edda",
-                                                color: "#155724",
+                                                bgcolor: {
+                                                    public: "#d4edda",
+                                                    private: "#ee1527ff",
+                                                },
+                                                color: {
+                                                    public: "#155724",
+                                                    private: "white",
+                                                },
                                                 fontWeight: 500,
                                                 borderRadius: 1,
                                                 fontSize: "0.85rem",
@@ -349,7 +381,7 @@ const PendingCourses = () => {
                                                     },
                                                     backgroundColor: "#343088"
                                                 }}
-                                                onClick={() => handleEditClick(course.id)}
+                                                onClick={() => handleEditClick(course._id)}
                                             >
                                                 Edit
                                             </Button>
@@ -364,6 +396,7 @@ const PendingCourses = () => {
                                                         bgcolor: "#dc2626",
                                                     },
                                                 }}
+                                                onClick={() => handleDeleteClick(course._id)}
                                             >
                                                 <DeleteIcon sx={{ fontSize: 16 }} />
                                             </IconButton>
@@ -371,6 +404,16 @@ const PendingCourses = () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
+
+                            {pendingCourses.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={7} sx={{ py: 3 }}>
+                                        <Typography variant="body1" sx={{ color: "text.primary" }}>
+                                            No pending courses found.
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>

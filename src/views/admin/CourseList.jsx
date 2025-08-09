@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import {
     Box,
@@ -21,82 +20,13 @@ import {
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, ArrowDropUp, ArrowDropDown } from "@mui/icons-material"
 import { useNavigate } from "react-router"
 import axiosInstance from "../../axios/axios"
-import { useSelector } from "react-redux"
 
-// Sample course data matching the image
-// const courseData = [
-//     {
-//         id: 1,
-//         serial: 1,
-//         instructor: "Muhammad Yunus",
-//         title: "Macro Photography & Focus Stacking Made...",
-//         category: "Photography & Video",
-//         price: 18.0,
-//         visibility: "Approved",
-//     },
-//     {
-//         id: 2,
-//         serial: 2,
-//         instructor: "Ashif Mahmud",
-//         title: "The Ultimate Photography Course For Begi...",
-//         category: "Photography & Video",
-//         price: 38.0,
-//         visibility: "Approved",
-//     },
-//     {
-//         id: 3,
-//         serial: 3,
-//         instructor: "Jubair Ahmed",
-//         title: "Real Estate Photography Masterclass 2025",
-//         category: "Photography & Video",
-//         price: 25.0,
-//         visibility: "Approved",
-//     },
-//     {
-//         id: 4,
-//         serial: 4,
-//         instructor: "Jubair Ahmed",
-//         title: "Learn Windows Server 2022 (AD, DNS, GPO)...",
-//         category: "Blockchain Develop",
-//         price: 30.0,
-//         visibility: "Approved",
-//     },
-//     {
-//         id: 5,
-//         serial: 5,
-//         instructor: "Jubair Ahmed",
-//         title: "Real World Projects: Linux Training for...",
-//         category: "Blockchain Develop",
-//         price: 32.0,
-//         visibility: "Approved",
-//     },
-//     {
-//         id: 6,
-//         serial: 6,
-//         instructor: "Rajibul Islam",
-//         title: "The Perfect Nginx Server - Ubuntu (24.04...",
-//         category: "Blockchain Develop",
-//         price: 29.0,
-//         visibility: "Approved",
-//     },
-//     {
-//         id: 7,
-//         serial: 7,
-//         instructor: "Rajibul Islam",
-//         title: "Introduction to Windows Server 2016 for...",
-//         category: "Design System",
-//         price: 45.0,
-//         visibility: "Approved",
-//     },
-// ]
-
-const CategoryList = () => {
+const CourseList = () => {
     const [entriesPerPage, setEntriesPerPage] = useState(10)
     const [searchTerm, setSearchTerm] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
     const navigate = useNavigate()
-    // const user  = useSelector((state) => state.auth.user);
-    // console.log("user:", user);
+    
     const value = localStorage.getItem('user');
     const user = JSON.parse(value);
     const [courseData, setCourseData] = useState([]);
@@ -115,24 +45,34 @@ const CategoryList = () => {
 
     const filteredData = courseData.filter(
         (course) =>
-            course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.category.toLowerCase().includes(searchTerm.toLowerCase()),
+            (course.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (course.category?.name || course.category || '').toLowerCase().includes(searchTerm.toLowerCase()),
     )
 
     const handleEditClick = (courseId) => {
-        navigate(`/admin/courses/create/`, { state: { courseId } });
+        navigate(`/admin/courses/create/?courseId=${courseId}` );
     };
 
     const fetchCourses = async () => {
         try {
             const response = await axiosInstance(`/api/course/list-courses/${user._id}`);
             console.log("courses fetched:", response.data);
-            setCourseData(response.data.courses);
+            setCourseData(response.data.courses || []);
         } catch (error) {
             console.error("Error fetching courses:", error);
-            return [];
+            setCourseData([]);
         }
     };
+
+    const handleDeleteClick = async (courseId) => {
+        try {
+            const res = await axiosInstance.delete(`/api/course/delete-course/${courseId}`);
+            console.log("response", res);
+            setCourseData(courseData.filter((course) => course._id !== courseId));
+        } catch (error) {
+            console.error("Error deleting course:", error);
+        }
+    };  
 
     useEffect(() => {
         fetchCourses()
@@ -281,7 +221,7 @@ const CategoryList = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {courseData.map((course) => (
+                            {courseData.map((course, index) => (
                                 <TableRow
                                     key={course._id}
                                     sx={{
@@ -295,6 +235,7 @@ const CategoryList = () => {
                                 >
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 600, fontSize: "0.875rem", color: "text.primary" }}>
+                                            {/* Use index + 1 as serial number since course.serial might be an object */}
                                             {course.serial}
                                         </Typography>
                                     </TableCell>
@@ -311,26 +252,27 @@ const CategoryList = () => {
                                                 whiteSpace: "nowrap",
                                             }}
                                         >
-                                            {course.title}
+                                            {course.title || 'No Title'}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ color: "text.primary", fontWeight: 600, fontSize: "0.875rem" }}>
-                                            {course.category}
+                                            {/* Handle both string and object category formats */}
+                                            {typeof course.category === 'object' ? course.category?.name || 'No Category' : course.category || 'No Category'}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Typography variant="body1" sx={{ fontWeight: 600, color: "text.primary", fontSize: "0.875rem" }}>
-                                            ${course?.regularPrice?.toFixed(2)}
+                                            ${course?.regularPrice ? course.regularPrice.toFixed(2) : '0.00'}
                                         </Typography>
                                     </TableCell>
                                     <TableCell sx={{ py: 2.5 }}>
                                         <Chip
-                                            label={course.visibility ===true ?'Public':"Private"}
+                                            label={course.visibility === true ? 'Public' : 'Private'}
                                             size="small"
                                             sx={{
-                                                bgcolor: "#d4edda",
-                                                color: "#155724",
+                                                bgcolor: course.visibility === true ? "#d4edda" : "#f8d7da",
+                                                color: course.visibility === true ? "#155724" : "#721c24",
                                                 fontWeight: 500,
                                                 borderRadius: 1,
                                                 fontSize: "0.85rem",
@@ -361,7 +303,7 @@ const CategoryList = () => {
                                                     },
                                                     backgroundColor: "#343088"
                                                 }}
-                                                onClick={() => handleEditClick(course.id)}
+                                                onClick={() => handleEditClick(course._id)}
                                             >
                                                 Edit
                                             </Button>
@@ -376,6 +318,7 @@ const CategoryList = () => {
                                                         bgcolor: "#dc2626",
                                                     },
                                                 }}
+                                                onClick={() => handleDeleteClick(course._id)}
                                             >
                                                 <DeleteIcon sx={{ fontSize: 16 }} />
                                             </IconButton>
@@ -383,6 +326,16 @@ const CategoryList = () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
+
+                            {courseData.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={7} sx={{ py: 2.5 }}>
+                                        <Typography variant="body1" sx={{ color: "text.primary", fontWeight: 600, fontSize: "0.875rem" }}>
+                                            No Courses Found
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -450,4 +403,4 @@ const CategoryList = () => {
         </Box>
     )
 }
-export default CategoryList
+export default CourseList

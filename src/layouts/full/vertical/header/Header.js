@@ -58,7 +58,7 @@ const Header = () => {
                 setIsMobileSidebar(!isMobileSidebar);
               }
             }}>
-            <IconMenu2 size="20" />
+            {/* <IconMenu2 size="20" /> */}
           </IconButton>
           {/* ------------------------------------------- */}
           {/* Search Dropdown */}

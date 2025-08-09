@@ -36,7 +36,7 @@ const Search = () => {
   const searchData = filterRoutes(Menuitems, search);
   return (
     <>
-      <IconButton
+      {/* <IconButton
         aria-label="show 4 new mails"
         color="inherit"
         aria-controls="search-menu"
@@ -45,7 +45,7 @@ const Search = () => {
         size="large"
       >
         <IconSearch size="16" />
-      </IconButton>
+      </IconButton> */}
       <Dialog
         open={showDrawer2}
         onClose={() => setShowDrawer2(false)}

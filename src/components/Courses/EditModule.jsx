@@ -22,6 +22,8 @@ const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList, s
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  console.log("selectedModule", selectedModule);
+
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     moduleName: selectedModule.moduleName,
@@ -37,7 +39,7 @@ const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList, s
   const handleClose = () => {
     setFormData({
       moduleName: "",
-      serial: "",
+      serial: null,
       status: true,
     });
     setErrors({ moduleName: false, serial: false });
@@ -48,7 +50,7 @@ const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList, s
   const validate = () => {
     const newErrors = {
       moduleName: formData.moduleName.trim() === "",
-      serial: formData.serial,
+      // serial: formData.serial,
     };
     setErrors(newErrors);
     return !newErrors.moduleName && !newErrors.serial;
@@ -58,19 +60,19 @@ const EditModule = ({ open, onClose, heading, courseId, onSave, setModuleList, s
     if (!validate()) return;
     console.log("formData", formData);
     try {
-      const resp = await axiosInstance.put(`/api/module//update-module/${selectedModule._id}`, {
+      formData
+      const resp = await axiosInstance.put(`/api/module/update-module/${selectedModule._id}`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
-        formData
       });
       console.log("Module updated:", resp);
-      setModuleList((prevModules) => [...prevModules, resp.data.module]);
+      setModuleList((prevModules) => prevModules.map((module) => (module._id === selectedModule._id ? resp.data.module : module)));
 
       if (onSave) onSave();
       handleClose();
     } catch (error) {
-      console.error("Error creating module:", error);
+      console.error("Error updating module:", error);
       setError(error.message || "Failed to create module");
     }
   };

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Box,
   Typography,
@@ -35,20 +35,23 @@ import {
   Search as SearchIcon,
 } from "@mui/icons-material"
 import { useNavigate } from "react-router"
+import { set } from "lodash"
+import axiosInstance from "../../axios/axios"
+import EditCategoryPopup from "./EditCategory"
 
 // Category data matching the original
-const categoryData = [
-  { id: 1, serial: 1, title: "Server Management", status: "Active" },
-  { id: 2, serial: 2, title: "Online Educations", status: "Active" },
-  { id: 3, serial: 3, title: "Design System", status: "Active" },
-  { id: 4, serial: 4, title: "Blockchain Develop", status: "Active" },
-  { id: 5, serial: 5, title: "Photography & Video", status: "Active" },
-  { id: 6, serial: 6, title: "Math & Technology", status: "Active" },
-  { id: 7, serial: 7, title: "Web Development", status: "Active" },
-  { id: 8, serial: 8, title: "Mobile Development", status: "Inactive" },
-  { id: 9, serial: 9, title: "Data Science", status: "Active" },
-  { id: 10, serial: 10, title: "Machine Learning", status: "Active" },
-]
+// const categoryData = [
+//   { id: 1, serial: 1, title: "Server Management", status: "Active" },
+//   { id: 2, serial: 2, title: "Online Educations", status: "Active" },
+//   { id: 3, serial: 3, title: "Design System", status: "Active" },
+//   { id: 4, serial: 4, title: "Blockchain Develop", status: "Active" },
+//   { id: 5, serial: 5, title: "Photography & Video", status: "Active" },
+//   { id: 6, serial: 6, title: "Math & Technology", status: "Active" },
+//   { id: 7, serial: 7, title: "Web Development", status: "Active" },
+//   { id: 8, serial: 8, title: "Mobile Development", status: "Inactive" },
+//   { id: 9, serial: 9, title: "Data Science", status: "Active" },
+//   { id: 10, serial: 10, title: "Machine Learning", status: "Active" },
+// ]
 
 const CategoryList = () => {
   const theme = useTheme()
@@ -59,6 +62,10 @@ const CategoryList = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [searchBy, setSearchBy] = useState("all")
   const [currentPage, setCurrentPage] = useState(1)
+  const [error, setError] = useState(null)
+  const [categories, setCategories] = useState([])
+  const [showEditCategory, setShowEditCategory] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
   const handleEntriesChange = (event) => {
     setEntriesPerPage(event.target.value)
@@ -75,34 +82,59 @@ const CategoryList = () => {
     setCurrentPage(1)
   }
 
-  const filteredData = categoryData.filter((item) => {
+  const filteredData = categories.filter((item) => {
     if (!searchTerm) return true
     const searchLower = searchTerm.toLowerCase()
 
     switch (searchBy) {
       case "title":
         return item.title.toLowerCase().includes(searchLower)
-      case "status":
-        return item.status.toLowerCase().includes(searchLower)
       case "serial":
         return item.serial.toString().includes(searchTerm)
       default:
         return (
           item.title.toLowerCase().includes(searchLower) ||
-          item.status.toLowerCase().includes(searchLower) ||
           item.serial.toString().includes(searchTerm)
         )
     }
   })
 
-  const handleDelete = (id) => {
-    console.log(`Deleting category with ID: ${id}`)
-    alert(`Category with ID ${id} would be deleted in a real application`)
+  const fetchCategories = async () => {
+    try {
+      const res = await axiosInstance.get('/api/categories/list-categories',
+        { withCredentials: true }
+      );
+
+      console.log("categories fetched:", res.data.categories);
+      setCategories(res.data.categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setError(error.message || "Failed to fetch categories");
+    }
   }
 
-  const handleEdit = (id) => {
-    console.log(`Editing category with ID: ${id}`)
-    navigate(`/admin/edit-category?id=${id}`)
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await axiosInstance.delete(`/api/categories/delete-category/${id}`);
+
+      console.log("response", res);
+      setCategories(categories.filter((category) => category._id !== id));
+      if (res.status === 200) {
+      }
+    } catch (error) {
+      setError(error.message || "Failed to delete category");
+      console.error("Error deleting category:", error);
+    }
+  }
+
+  const handleEdit = (category) => {
+    // navigate(`/admin/edit-category?id=${id}`)
+    setShowEditCategory(true)
+    setSelectedCategory(category)
   }
 
   const handleCreateNew = () => {
@@ -118,16 +150,7 @@ const CategoryList = () => {
     setCurrentPage(value)
   }
 
-  const getStatusChipColor = (status) => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return { bgcolor: "#d4edda", color: "#155724" }
-      case 'inactive':
-        return { bgcolor: "#fff3cd", color: "#856404" }
-      default:
-        return { bgcolor: "#e2e3e5", color: "#383d41" }
-    }
-  }
+
 
   return (
     <Box sx={{
@@ -169,7 +192,7 @@ const CategoryList = () => {
             px: 3,
             py: 1.5,
             fontWeight: 500,
-             backgroundColor: "#343088"
+            backgroundColor: "#343088"
           }}
         >
           Create New
@@ -339,7 +362,7 @@ const CategoryList = () => {
             </TableHead>
             <TableBody>
               {currentData.length > 0 ? (
-                currentData.map((item) => (
+                currentData.map((item, index) => (
                   <TableRow
                     key={item.id}
                     sx={{
@@ -360,7 +383,7 @@ const CategoryList = () => {
                           color: "text.primary"
                         }}
                       >
-                        {item.serial}
+                        {index + 1}
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ py: 3 }}>
@@ -372,15 +395,16 @@ const CategoryList = () => {
                           fontSize: "0.875rem"
                         }}
                       >
-                        {item.title}
+                        {item.categoryName}
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ py: 3 }}>
                       <Chip
-                        label={item.status}
+                        label={item.status === true ? 'Public' : 'Private'}
                         size="small"
                         sx={{
-                          ...getStatusChipColor(item.status),
+                          bgcolor: `${item.status === true ? "#d4edda" : "#fff3cd"}`,
+                          color: "#155724",
                           fontWeight: 500,
                           borderRadius: 2,
                           fontSize: "0.75rem",
@@ -400,7 +424,7 @@ const CategoryList = () => {
                           variant="contained"
                           size="small"
                           startIcon={<EditIcon sx={{ fontSize: 16 }} />}
-                          onClick={() => handleEdit(item.id)}
+                          onClick={() => handleEdit(item)}
                           sx={{
                             bgcolor: "#374151",
                             color: "white",
@@ -414,13 +438,13 @@ const CategoryList = () => {
                             "&:hover": {
                               bgcolor: "#584ca0",
                             },
-                             backgroundColor: "#343088"
+                            backgroundColor: "#343088"
                           }}
                         >
                           Edit
                         </Button>
                         <IconButton
-                          onClick={() => handleDelete(item.id)}
+                          onClick={() => handleDelete(item._id)}
                           sx={{
                             backgroundColor: '#ef4444',
                             color: 'white',
@@ -489,6 +513,19 @@ const CategoryList = () => {
           </CardContent>
         </Card>
       )}
+
+      {showEditCategory && (
+        <EditCategoryPopup
+          open={showEditCategory}
+          onClose={() => setShowEditCategory(false)}
+          category={selectedCategory}
+          onSuccess={() => {
+            setShowEditCategory(false);
+            fetchCategories();
+          }}
+        />
+      )}
+
     </Box>
   )
 }

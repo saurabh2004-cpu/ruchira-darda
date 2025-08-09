@@ -14,56 +14,68 @@ import {
   IconButton,
 } from "@mui/material"
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material"
-import React from "react"
+import React, { useEffect } from "react"
 import CreateLession from "./CreateLession"
+import axiosInstance from "../../axios/axios"
+import EditLesson from "./EditLession"
+import EditLession from "./EditLession"
 
-// Sample lesson data matching the image
-const lessonData = [
-  {
-    id: 1,
-    serial: 1,
-    name: "Overview",
-    visibility: "Public",
-    status: "Active",
-  },
-  {
-    id: 2,
-    serial: 2,
-    name: "Historical Context",
-    visibility: "Public",
-    status: "Active",
-  },
-  {
-    id: 3,
-    serial: 2,
-    name: "Answering Questions with Data",
-    visibility: "Private",
-    status: "Active",
-  },
-]
+const LessionList = ({ module, moduleId, onClose }) => {
 
-const LessionList = () => {
-    const [showCreateModuleCard, setShowCreateModuleCard] = React.useState(false);
-    const [showEditLessionCard, setShowEditLessionCard] = React.useState(false);
+  const [showEditLessionCard, setShowEditLessionCard] = React.useState(false);
+  const [lessons, setLessons] = React.useState([]);
+  const [showCreateLessionCard, setShowCreateLessionCard] = React.useState(false);
+  const [selectedLession, setSelectedLession] = React.useState(null);
 
-    const handleSave = () => {
-      console.log("Module saved");
-      setShowCreateModuleCard(false);
+  const handleEditLessionClick = (lessonId) => {
+    setShowEditLessionCard(true);
+    setSelectedLession(lessonId);
+  }
+  const [selectedLessionId, setSelectedLessionId] = React.useState(null);
+
+  const fetchLessons = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/lessons/list-lessions/${module._id}`);
+      console.log("Lessons fetched:", response.data);
+      if (response.data && response.data.lessons) {
+        setLessons(response.data.lessons);
+      }
+    } catch (error) {
+      console.error("Error fetching lessons:", error);
     }
-    const handleClose = () => {
-      setShowCreateModuleCard(false);
-    }
+  };
 
-    const handleEditLessionClick = (lessonId) => {
-      setShowEditLessionCard(true);
+  const handleNextClick = (lessonId) => {
+    setSelectedLessionId(lessonId);
+  };
+
+
+  const handleDeleteSession = async (lessonId) => {
+    try {
+      const response = await axiosInstance.delete(`/api/lessons/delete-lession/${lessonId}`);
+
+      console.log("Session deleted:", response.data);
+      if (response.status === 200) {
+        setLessons((prevLessons) => prevLessons.filter((lesson) => lesson._id !== lessonId));
+      }
+    } catch (error) {
+      console.error("Error deleting session:", error);
     }
+  };
+
+  useEffect(() => {
+    fetchLessons();
+  }, [module._id]);
 
   return (
     <Box sx={{ p: 3, maxWidth: 1400, mx: "auto" }}>
+
+
+
       {/* Header Section */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
         <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
-          Module : Introduction
+          Module : {module.moduleName}
         </Typography>
         <Button
           variant="contained"
@@ -78,9 +90,9 @@ const LessionList = () => {
             fontWeight: 500,
             "&:hover": {
               bgcolor: "#34495e",
-            },
+            }, backgroundColor: "#343088"
           }}
-          onClick={() => setShowCreateModuleCard(true)}
+          onClick={() => setShowCreateLessionCard(true)}
         >
           Add Lesson
         </Button>
@@ -101,18 +113,16 @@ const LessionList = () => {
                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "1rem" }}>
                   Visibility
                 </TableCell>
-                <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "1rem" }}>
-                  Status
-                </TableCell>
+
                 <TableCell sx={{ py: 2, fontWeight: 600, color: "text.secondary", fontSize: "1rem" }}>
                   Action
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {lessonData.map((lesson) => (
+              {lessons.map((lesson) => (
                 <TableRow
-                  key={lesson.id}
+                  key={lesson._id}
                   sx={{
                     "&:hover": {
                       bgcolor: "grey.25",
@@ -128,17 +138,17 @@ const LessionList = () => {
                     </Typography>
                   </TableCell>
                   <TableCell sx={{ py: 2.5 }}>
-                    <Typography variant="body1" sx={{ fontWeight: 500, color: "text.primary",fontSize: "0.95rem" }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500, color: "text.primary", fontSize: "0.95rem" }}>
                       {lesson.name}
                     </Typography>
                   </TableCell>
                   <TableCell sx={{ py: 2.5 }}>
                     <Chip
-                      label={lesson.visibility}
+                      label={lesson.isPublic ? "Public" : "Private"}
                       size="small"
                       sx={{
-                        bgcolor: lesson.visibility === "Public" ? "#d4edda" : "#f8d7da",
-                        color: lesson.visibility === "Public" ? "#155724" : "#721c24",
+                        bgcolor: lesson.isPublic ? "#d4edda" : "#f8d7da",
+                        color: lesson.isPublic ? "#155724" : "#721c24",
                         fontWeight: 500,
                         borderRadius: 1,
                         fontSize: "0.95rem",
@@ -147,21 +157,7 @@ const LessionList = () => {
                       }}
                     />
                   </TableCell>
-                  <TableCell sx={{ py: 2.5 }}>
-                    <Chip
-                      label={lesson.status}
-                      size="small"
-                      sx={{
-                        bgcolor: "#d4edda",
-                        color: "#155724",
-                        fontWeight: 500,
-                        borderRadius: 1,
-                        fontSize: "0.95rem",
-                        height: 28,
-                        minWidth: 60,
-                      }}
-                    />
-                  </TableCell>
+
                   <TableCell sx={{ py: 2.5 }}>
                     <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                       <Button
@@ -180,9 +176,9 @@ const LessionList = () => {
                           minWidth: "auto",
                           "&:hover": {
                             bgcolor: "#4b5563",
-                          },
+                          }, backgroundColor: "#343088"
                         }}
-                        onClick={()=>handleEditLessionClick(lesson.id)}
+                        onClick={() => handleEditLessionClick(lesson)}
                       >
                         Edit
                       </Button>
@@ -197,6 +193,7 @@ const LessionList = () => {
                             bgcolor: "#dc2626",
                           },
                         }}
+                        onClick={() => handleDeleteSession(lesson._id)}
                       >
                         <DeleteIcon sx={{ fontSize: 25 }} />
                       </IconButton>
@@ -207,50 +204,82 @@ const LessionList = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        {/* Show message when no lessons */}
+        {lessons.length === 0 && (
+          <Box sx={{ p: 4, textAlign: 'center' }}>
+            <Typography variant="body1" sx={{ color: "text.secondary" }}>
+              No lessons found for this module.
+            </Typography>
+          </Box>
+        )}
       </Paper>
 
-      {/* Pagination Buttons */}
-      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+      <Box mt={4} display="flex" gap={2}>
+        
         <Button
           variant="outlined"
+          onClick={onClose}
           sx={{
+            mb: 2,
             textTransform: "none",
-            borderColor: "grey.400",
-            color: "text.primary",
-            px: 3,
-            py: 1,
             borderRadius: 2,
             fontWeight: 500,
-            
+            ":hover": {
+               backgroundColor: "#343088"
+            }
           }}
         >
-          Previous
+          Back
         </Button>
         <Button
           variant="contained"
+          onClick={handleNextClick}
+          disabled={lessons.length === 0}
           sx={{
+            mb: 2,
             textTransform: "none",
-            bgcolor: "#6366f1",
-            px: 3,
-            py: 1,
             borderRadius: 2,
             fontWeight: 500,
-            "&:hover": {
-              bgcolor: "#5048e5",
-            },
+             backgroundColor: "#343088"
           }}
         >
           Next
         </Button>
       </Box>
-      {showCreateModuleCard && (
-        <CreateLession open={showCreateModuleCard} onClose={handleClose} onSave={handleSave} heading="Create Lesson" />
-      )}
 
-      {showEditLessionCard && (
-        <CreateLession open={showEditLessionCard} onClose={() => setShowEditLessionCard(false)} onSave={handleSave} heading="Edit Lesson" />
-      )}
-    </Box>
+      {/* Create Lesson Dialog - FIXED: Changed showCreateModuleCard to showCreateLessionCard */}
+      {
+        showCreateLessionCard && (
+          <CreateLession
+            open={showCreateLessionCard}
+            onClose={() => {
+              setShowCreateLessionCard(false)
+              fetchLessons()
+            }}
+            setLessons={setLessons}
+            moduleId={moduleId || module._id}
+            heading="Create Lesson"
+          />
+        )
+      }
+
+      {/* Edit Lesson Dialog */}
+      {
+        showEditLessionCard && (
+          <EditLesson
+            open={showEditLessionCard}
+            onClose={() => {
+              setShowEditLessionCard(false)
+              fetchLessons()
+            }}
+            heading="Edit Lesson"
+            setLessons={setLessons}
+            lesson={selectedLession}
+          />
+        )
+      }
+    </Box >
   )
 }
 

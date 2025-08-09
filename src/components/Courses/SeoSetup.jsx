@@ -26,6 +26,18 @@ const SeoSetupForm = () => {
     console.log("Update SEO settings", { seoTitle, seoDescription })
   }
 
+  const handleSave = async() => {
+   try {
+    const res = await axiosInstance.post("/api/seo/create-seo", {
+      title: seoTitle,
+      description: seoDescription
+    })
+
+    console.log("response")
+   } catch (error) {
+    console.error("Error creating SEO:", error);
+   }
+  }
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Breadcrumb Navigation */}
@@ -57,7 +69,7 @@ const SeoSetupForm = () => {
               fontSize: "1rem",
             }}
           >
-            SEO title
+            SEO Title
           </Typography>
           <TextField
             fullWidth
@@ -144,10 +156,9 @@ const SeoSetupForm = () => {
               fontSize: "1rem",
               borderColor: "#d1d5db",
               color: "#374151",
-              "&:hover": {
-                borderColor: "#9ca3af",
-                bgcolor: "#f9fafb",
-              },
+               ":hover": {
+               backgroundColor: "#343088"
+            }
             }}
           >
             Previous
@@ -155,7 +166,7 @@ const SeoSetupForm = () => {
           <Button
             variant="contained"
             size="large"
-            onClick={handleUpdate}
+            onClick={handleSave}
             sx={{
               px: 4,
               py: 1.5,
@@ -166,10 +177,10 @@ const SeoSetupForm = () => {
               bgcolor: "#6366f1",
               "&:hover": {
                 bgcolor: "#5048e5",
-              },
+              }, backgroundColor: "#343088"
             }}
           >
-            Update
+            Save
           </Button>
         </Box>
       </Box>

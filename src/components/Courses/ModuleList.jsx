@@ -54,15 +54,14 @@ const moduleData = [
   // },
 ]
 
-const ModuleListTable = ({ setStep }) => {
+const ModuleListTable = ({ setStep, courseId }) => {
   const [showCreateModuleCard, setShowCreateModuleCard] = React.useState(false);
   const [showLessionList, setShowLessionList] = React.useState(false);
   const [showEditModuleCard, setShowEditModuleCard] = React.useState(false);
   const [moduleList, setModuleList] = React.useState([]);
   const [error, setError] = React.useState(null);
-  const [searchParams] = useSearchParams();
-  const courseId = searchParams.get("courseId");
-  const [selectedModule, setSelectedModule] = React.useState({});
+  const [selectedModule, setSelectedModule] = React.useState(null);
+
 
   const handleSave = () => {
     console.log("Module saved");
@@ -98,16 +97,10 @@ const ModuleListTable = ({ setStep }) => {
     fetchModules();
   }, [courseId]);
 
-  const steps = [
-    { label: "Basic Information", active: true, completed: false },
-    { label: "Image And Video", active: false, completed: false },
-    { label: "Curriculum", active: false, completed: false },
-    { label: "Seo Setup", active: false, completed: false },
-  ];
+
 
   return (
     <>
-      <BreadcrumbNavigation steps={steps} setStep={setStep} />
       {!showLessionList ? <Box sx={{ p: 3, maxWidth: 1400, mx: "auto" }}>
         {/* Header Section */}
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
@@ -127,7 +120,7 @@ const ModuleListTable = ({ setStep }) => {
               fontWeight: 500,
               "&:hover": {
                 bgcolor: "#34495e",
-              },
+              }, backgroundColor: "#343088"
             }}
             onClick={() => setShowCreateModuleCard(true)}
           >
@@ -161,7 +154,7 @@ const ModuleListTable = ({ setStep }) => {
               <TableBody>
                 {moduleList ? moduleList?.map((module) => (
                   <TableRow
-                    key={module.id}
+                    key={module._id}
                     sx={{
                       "&:hover": {
                         bgcolor: "grey.25",
@@ -182,7 +175,7 @@ const ModuleListTable = ({ setStep }) => {
                       </Typography>
                     </TableCell>
                     <TableCell sx={{ py: 2.5 }}>
-                      <Typography variant="body1" sx={{ color: "text.secondary", fontSize: "1rem" ,alignItems:"center",textAlign:""}}>
+                      <Typography variant="body1" sx={{ color: "text.secondary", fontSize: "1rem", alignItems: "center", textAlign: "" }}>
                         {module.lessions.length}
                       </Typography>
                     </TableCell>
@@ -218,10 +211,10 @@ const ModuleListTable = ({ setStep }) => {
                             minWidth: "auto",
                             "&:hover": {
                               bgcolor: "#5048e5",
-                            },
+                            }, backgroundColor: "#343088"
                           }}
 
-                          onClick={() => setShowLessionList(true)}
+                          onClick={() => { setShowLessionList(true); setSelectedModule(module) }}
                         >
                           Lessons
                         </Button>
@@ -236,7 +229,7 @@ const ModuleListTable = ({ setStep }) => {
                               bgcolor: "#4b5563",
                             },
                           }}
-                          onClick={() => {handleEditModuleClick(module)}}
+                          onClick={() => { handleEditModuleClick(module) }}
                         >
                           <EditIcon sx={{ fontSize: 20 }} />
                         </IconButton>
@@ -271,16 +264,17 @@ const ModuleListTable = ({ setStep }) => {
         )}
 
         <Box mt={4} display="flex" gap={2}>
-          <Button variant="contained" color="primary" sx={{ px: 4, fontSize: "18px", fontWeight: "500" }}
+          {/* <Button variant="contained" color="primary" sx={{ px: 4, fontSize: "18px", fontWeight: "500" }}
             onClick={() => window.location.href = '/admin/courses/create'}>
             Previous Step
-          </Button>
+          </Button> */}
 
-          <Button variant="contained" color="primary" sx={{ px: 4, fontSize: "18px", fontWeight: "500" }}
+          {/* <Button variant="contained" color="primary" sx={{ px: 4, fontSize: "18px", fontWeight: "500" }}
             onClick={() => setShowLessionList(true)}>
             Next Step
-          </Button>
+          </Button> */}
         </Box>
+        
 
         {/* Pagination Buttons
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
@@ -329,7 +323,7 @@ const ModuleListTable = ({ setStep }) => {
           <EditModule open={showEditModuleCard} onClose={() => setShowEditModuleCard(false)} onSave={handleSave} setModuleList={setModuleList} selectedModule={selectedModule} heading="Edit Module" />
         )}
       </Box> :
-        <LessionList />
+        <LessionList module={selectedModule} moduleId={selectedModule._id} onClose={() => setShowLessionList(false)} />
       }
     </>
   )

@@ -23,6 +23,7 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     moduleName: "",
     serial: "",
@@ -56,27 +57,39 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
 
   const handleCreateModule = async () => {
     if (!validate()) return;
+    
+    setLoading(true);
+    setError("");
+    
     console.log("formData", formData);
+    
     try {
-      const resp = await axiosInstance.post(`/api/module/create-module/${courseId}`, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        formData
-      });
+      const resp = await axiosInstance.post(
+        `/api/module/create-module/${courseId}`, 
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }
+      );
+      
       console.log("Module created:", resp);
-      setModuleList((prevModules) => [...prevModules, resp.data.module]);
+      
+      if (resp.data && resp.data.module) {
+        setModuleList((prevModules) => [...prevModules, resp.data.module]);
+      }
 
       if (onSave) onSave();
       handleClose();
     } catch (error) {
       console.error("Error creating module:", error);
-      setError(error.message || "Failed to create module");
+      const errorMessage = error.response?.data?.message || error.message || "Failed to create module";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
-
-
-
 
   return (
     <Dialog
@@ -138,6 +151,7 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
               placeholder="Enter module name"
               error={errors.moduleName}
               helperText={errors.moduleName ? "Module name is required" : ""}
+              disabled={loading}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   bgcolor: "white",
@@ -163,6 +177,7 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
               placeholder="Enter serial number"
               error={errors.serial}
               helperText={errors.serial ? "Serial is required" : ""}
+              disabled={loading}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   bgcolor: "white",
@@ -186,6 +201,7 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
                 <Switch
                   checked={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
+                  disabled={loading}
                   sx={{
                     "& .MuiSwitch-switchBase.Mui-checked": {
                       color: "#6366f1",
@@ -212,6 +228,7 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
           fullWidth
           variant="contained"
           onClick={handleCreateModule}
+          disabled={loading}
           sx={{
             py: 2,
             borderRadius: 2,
@@ -222,9 +239,13 @@ const CreateModule = ({ open, onClose, heading, courseId, onSave, setModuleList 
             "&:hover": {
               bgcolor: "#5048e5",
             },
+            "&:disabled": {
+              bgcolor: "grey.300",
+              color: "grey.500",
+            },
           }}
         >
-          Save Module
+          {loading ? "Saving..." : "Save Module"}
         </Button>
       </DialogActions>
     </Dialog>

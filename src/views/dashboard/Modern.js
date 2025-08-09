@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import { Grid } from '@mui/material';
 
@@ -14,13 +14,26 @@ import SellingProducts from '../../components/dashboards/modern/SellingProducts'
 import WeeklyStats from '../../components/dashboards/modern/WeeklyStats';
 import TopPerformers from '../../components/dashboards/modern/TopPerformers';
 import Welcome from 'src/layouts/full/shared/welcome/Welcome';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axiosInstance from '../../axios/axios';
+import {login} from '../../store/authSlice'
 
 const Modern = () => {
-  const user = useSelector((state) => state.auth.userData);
-  console.log("user", user);
+  const dispatch = useDispatch();
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await axiosInstance.get('/api/user/current');
+      dispatch(login(response.data.user));
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+      return null;
+    }
+  };
 
-  console.log("current user :", user);
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
   return (
     <Box>
       <Grid container spacing={3}>

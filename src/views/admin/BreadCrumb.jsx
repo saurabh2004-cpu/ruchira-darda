@@ -50,7 +50,7 @@ const BreadcrumbNavigation = ({ steps, setStep }) => {
                 fontSize: isMobile ? "0.875rem" : "1rem",
                 cursor: step.completed ? "pointer" : "default",
               }}
-              onClick={() => setStep(step.label)}
+              onClick={() => {setStep(step.label);console.log("current step", step.label);}}
             >
               {step.label}
             </Link>
